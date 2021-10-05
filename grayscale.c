@@ -81,7 +81,8 @@ char* Grayscale(char path[])
 		{
 			Uint8 pixel = GetPixel(img, x, y);
 			SDL_GetRGB(pixel, img->format, &r, &g, &b);
-			Uint8 averagePixel = (Uint8)(r * 0.3f + g * 0.59f + b * 0.11f); 
+			Uint8 gray = (Uint8)(r * 0.3f + g * 0.59f + b * 0.11f);
+			Uint32 averagePixel = SDL_MapRGB(img->format, gray, gray, gray);
 			PutPixel(img, x, y, averagePixel);		
 			
 		}

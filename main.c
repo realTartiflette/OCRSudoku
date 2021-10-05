@@ -9,7 +9,7 @@ int main(int argc, char **argv)
 	if (argc == 2)
 	{
 		
-		openImage(argv[1]);
+		//openImage(argv[1]);
 		Grayscale(argv[1]);
 
 	}	
