@@ -15,4 +15,7 @@ void addMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matr
 //multiplies two matrices with the cols of A == the rows of B
 void multMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matrix result);
 
+//transpose the matrix
+void transMat(matrix A, int rowsA, int colsA, matrix result);
+
 #endif

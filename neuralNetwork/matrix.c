@@ -2,13 +2,18 @@
 #include <stdlib.h>
 #include "matrix.h"
 
-void printMat(matrix mat, int rows, int cols)
+void isInRange(int rows, int cols, char *funcName)
 {
     if(rows > MAX_ROWS || rows <= 0 || cols > MAX_COlS || cols <= 0)
     {
-        printf("printMat : rows or cols are to hight or < 0");
+        printf("%s : rows or cols are to hight or < 0", funcName);
         exit(EXIT_FAILURE);
     }
+}
+
+void printMat(matrix mat, int rows, int cols)
+{
+    isInRange(rows, cols, "printMat");
 
     for (int i = 0; i < rows; i++)
     {
@@ -22,6 +27,9 @@ void printMat(matrix mat, int rows, int cols)
 
 void addMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matrix result)
 {
+    isInRange(rowsA, colsA, "addMat");
+    isInRange(rowsB, colsB, "addMat");
+
     if(rowsA != rowsB || colsA != colsB)
     {
         printf("addMat : rowsA != rowsB or colsA != colsB");
@@ -38,6 +46,9 @@ void addMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matr
 
 void multMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matrix result)
 {
+    isInRange(rowsA, colsA, "multMat");
+    isInRange(rowsB, colsB, "multMat");
+
     if(colsA != rowsB)
     {
         printf("addMat : rowsA != rowsB or colsA != colsB");
@@ -56,4 +67,18 @@ void multMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, mat
             result[i][j] = sum;   
         }
     }
+}
+
+void transMat(matrix A, int rows, int cols, matrix result)
+{
+    isInRange(rows, cols, "transMat");
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            result[j][i] = A[i][j];
+        }
+        
+    }
+    
 }
