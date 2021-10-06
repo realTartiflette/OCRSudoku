@@ -16,6 +16,8 @@ void addMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matr
 void multMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matrix result);
 
 //transpose the matrix
-void transMat(matrix A, int rowsA, int colsA, matrix result);
+void transMat(matrix A, int rows, int cols, matrix result);
+
+void applyFunc(matrix A, int rows, int cols, float (*opp) (float), matrix result);
 
 #endif

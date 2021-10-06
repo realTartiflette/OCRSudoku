@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include "matrix.h"
 
+float test(float value)
+{
+	return value * 2;
+}
+
 int main()
 {
 	matrix A = 
@@ -9,10 +14,9 @@ int main()
 		{1,2,3},
 		{4,5,6},
 		{7,8,9},
-		{10,11,12}
 	};
 	
 	matrix res;
-	transMat(A, 4, 3, res);
-	printMat(res, 3, 4);
+	applyFunc(A, 3, 3, test, res);
+	printMat(res, 3, 3);
 }

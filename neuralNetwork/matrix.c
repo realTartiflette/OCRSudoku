@@ -82,3 +82,17 @@ void transMat(matrix A, int rows, int cols, matrix result)
     }
     
 }
+
+void applyFunc(matrix A, int rows, int cols, float (*opp) (float), matrix result)
+{
+    isInRange(rows, cols, "applyFunc");
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            result[j][i] = (*opp)(A[i][j]);
+        }
+        
+    }
+}
