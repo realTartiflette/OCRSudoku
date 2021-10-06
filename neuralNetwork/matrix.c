@@ -35,3 +35,25 @@ void addMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matr
     }
     
 }
+
+void multMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matrix result)
+{
+    if(colsA != rowsB)
+    {
+        printf("addMat : rowsA != rowsB or colsA != colsB");
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < rowsA; i++)
+    {
+        for (int j = 0; j < colsB; j++)
+        {
+            float sum = 0;
+            for (int k = 0; k < colsA; k++)
+            {
+                sum += A[i][k]*B[k][j];
+            }
+            result[i][j] = sum;   
+        }
+    }
+}

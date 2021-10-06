@@ -6,19 +6,17 @@ int main()
 {
 	matrix A = 
 	{
-		{1,2,3},
-		{4,5,6},
-		{7,8,9}
+		{1,2},
+		{3,4}
 	};
 
 	matrix B = 
 	{
-		{1,2,3},
-		{4,5,6},
-		{7,8,9}
+		{1,2},
+		{3,4}
 	};
 	
 	matrix res;
-	addMat(A, 3, 3, B, 3, 3, res);
-	printMat(res, 3, 3);
+	multMat(A, 2, 2, B, 2, 2, res);
+	printMat(res, 2, 2);
 }

@@ -12,4 +12,7 @@ void printMat(matrix mat, int rows, int cols);
 //add two matrices with the same dimentions
 void addMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matrix result);
 
+//multiplies two matrices with the cols of A == the rows of B
+void multMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matrix result);
+
 #endif
