@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "openImage.h"
+#include "grayscale.h"
 
 int main(int argc, char **argv)
 {
@@ -11,6 +12,7 @@ int main(int argc, char **argv)
 		
 		//openImage(argv[1]);
 		Grayscale(argv[1]);
+		exit(EXIT_SUCCESS);
 
 	}	
 
