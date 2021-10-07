@@ -1,22 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "matrix.h"
-
-float test(float value)
-{
-	return value * 2;
-}
+#include "neuralNetwork.h"
 
 int main()
 {
-	matrix A = 
-	{
-		{1,2,3},
-		{4,5,6},
-		{7,8,9},
-	};
-	
-	matrix res;
-	applyFunc(A, 3, 3, test, res);
-	printMat(res, 3, 3);
+	//int n[MAX_LAYER] = {2};
+	//createNeuralNetwork(3, 1, n, 1);
+	int a = 5;
+	int test[a];
+
+	printf("%i\n", test[0]);
+	return 0;
 }
