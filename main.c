@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "openImage.h"
 #include "grayscale.h"
+#include "blurMedian.h"
 
 int main(int argc, char **argv)
 {
@@ -11,7 +12,8 @@ int main(int argc, char **argv)
 	{
 		
 		//openImage(argv[1]);
-		Grayscale(argv[1]);
+		//Grayscale(argv[1]);
+		BlurMedian(argv[1], 3);
 		exit(EXIT_SUCCESS);
 
 	}	
