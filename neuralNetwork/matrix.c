@@ -1,7 +1,7 @@
 #include <stdio.h> 
 #include "matrix.h"
 
-void isInRange(ulong rows, ulong cols, char *funcName)
+void isInRange(int rows, int cols, char *funcName)
 {
     if(rows > MAX_ROWS || rows <= 0 || cols > MAX_COlS || cols <= 0)
     {
@@ -10,21 +10,21 @@ void isInRange(ulong rows, ulong cols, char *funcName)
     }
 }
 
-void printMat(matrix mat, ulong rows, ulong cols)
+void printMat(matrix mat, int rows, int cols)
 {
     isInRange(rows, cols, "printMat");
 
-    for (ulong i = 0; i < rows; i++)
+    for (int i = 0; i < rows; i++)
     {
         printf("| ");
-        for (ulong j = 0; j < cols; j++)
+        for (int j = 0; j < cols; j++)
             printf("%f ", mat[i][j]);
         printf("|\n");
     }
     
 }
 
-void addMat(matrix A, ulong rowsA, ulong colsA, matrix B, ulong rowsB, ulong colsB, matrix result)
+void addMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matrix result)
 {
     isInRange(rowsA, colsA, "addMat");
     isInRange(rowsB, colsB, "addMat");
@@ -35,15 +35,15 @@ void addMat(matrix A, ulong rowsA, ulong colsA, matrix B, ulong rowsB, ulong col
         exit(EXIT_FAILURE);
     }
 
-    for (ulong i = 0; i < rowsA; i++)
+    for (int i = 0; i < rowsA; i++)
     {
-        for (ulong j = 0; j < colsA; j++)
+        for (int j = 0; j < colsA; j++)
             result[i][j] = A[i][j] + B[i][j];
     }
     
 }
 
-void multMat(matrix A, ulong rowsA, ulong colsA, matrix B, ulong rowsB, ulong colsB, matrix result)
+void multMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matrix result)
 {
     isInRange(rowsA, colsA, "multMat");
     isInRange(rowsB, colsB, "multMat");
@@ -54,12 +54,12 @@ void multMat(matrix A, ulong rowsA, ulong colsA, matrix B, ulong rowsB, ulong co
         exit(EXIT_FAILURE);
     }
 
-    for (ulong i = 0; i < rowsA; i++)
+    for (int i = 0; i < rowsA; i++)
     {
-        for (ulong j = 0; j < colsB; j++)
+        for (int j = 0; j < colsB; j++)
         {
             float sum = 0;
-            for (ulong k = 0; k < colsA; k++)
+            for (int k = 0; k < colsA; k++)
             {
                 sum += A[i][k]*B[k][j];
             }
@@ -68,12 +68,12 @@ void multMat(matrix A, ulong rowsA, ulong colsA, matrix B, ulong rowsB, ulong co
     }
 }
 
-void transMat(matrix A, ulong rows, ulong cols, matrix result)
+void transMat(matrix A, int rows, int cols, matrix result)
 {
     isInRange(rows, cols, "transMat");
-    for (ulong i = 0; i < rows; i++)
+    for (int i = 0; i < rows; i++)
     {
-        for (ulong j = 0; j < cols; j++)
+        for (int j = 0; j < cols; j++)
         {
             result[j][i] = A[i][j];
         }
@@ -82,13 +82,13 @@ void transMat(matrix A, ulong rows, ulong cols, matrix result)
     
 }
 
-void applyFunc(matrix A, ulong rows, ulong cols, float (*opp) (float), matrix result)
+void applyFunc(matrix A, int rows, int cols, float (*opp) (float), matrix result)
 {
     isInRange(rows, cols, "applyFunc");
 
-    for (ulong i = 0; i < rows; i++)
+    for (int i = 0; i < rows; i++)
     {
-        for (ulong j = 0; j < cols; j++)
+        for (int j = 0; j < cols; j++)
         {
             result[j][i] = (*opp)(A[i][j]);
         }

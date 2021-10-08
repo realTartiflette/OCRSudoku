@@ -4,11 +4,8 @@
 
 int main()
 {
-	//int n[MAX_LAYER] = {2};
-	//createNeuralNetwork(3, 1, n, 1);
-	int a = 5;
-	int test[a];
-
-	printf("%i\n", test[0]);
+	int n[MAX_LAYER] = {3,2};
+	neuralNetwork nn = createNeuralNetwork(2,2,n,1);
+	printNetwork(nn);
 	return 0;
 }
