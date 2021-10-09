@@ -1,13 +1,21 @@
 #include "neuralNetwork.h"
 #include <stdio.h>
+#include <math.h>
+#include <time.h>
 
 float getFloatRandom()
 {
     return (float)rand()/(float)(RAND_MAX);
 }
 
+float sigmoid(float x)
+{
+    return (float)(1 / (1 + exp(-x)));
+}
+
 void printNetwork(neuralNetwork nn)
 {
+    printf("    ");
     for (int i = 0; i < nn.inputSize; i++)
     {
         printf("o ");
@@ -16,6 +24,7 @@ void printNetwork(neuralNetwork nn)
 
     for (int i = 0; i < nn.nbOfHiddenLayers; i++)
     {
+        printf("    ");
         for (int j = 0; j < nn.hiddenLayers[i].nbOfNeurons; j++)
         {
             printf("o ");
@@ -24,6 +33,7 @@ void printNetwork(neuralNetwork nn)
         
     }
 
+    printf("    ");
     for (int i = 0; i < nn.outputLayer.nbOfNeurons; i++)
     {
         printf("o ");
@@ -36,7 +46,7 @@ neuralNetwork createNeuralNetwork(int inputSize, int nbOfhidenLayers, int nbOfNe
 {
     layer layers[MAX_LAYER];
 
-    //srand((unsigned int) time(NULL));
+    srand((unsigned int) time(NULL));
 
     int prevWeigthSize = inputSize;
     for (int i = 0; i < nbOfhidenLayers; i++)
@@ -49,8 +59,6 @@ neuralNetwork createNeuralNetwork(int inputSize, int nbOfhidenLayers, int nbOfNe
             {
                 n.weights[k][0] = getFloatRandom();
             }
-            /*printMat(n.weights, prevWeigthSize, 1);
-            printf("\n");*/
             layerNeuron[j] = n;
         }
 
@@ -93,4 +101,44 @@ neuralNetwork createNeuralNetwork(int inputSize, int nbOfhidenLayers, int nbOfNe
     };
 
     return nn;
+}
+
+void forwardPropagation(neuralNetwork *nn, matrix inputs, int nbOfInputElems, matrix result)
+{
+    matrix resLayer;
+    int resLayerRows = nbOfInputElems;
+    int resLayerCols = nn->inputSize;
+    copyMat(inputs, resLayerRows, resLayerCols, resLayer);
+    
+    for (int i = 0; i < nn->nbOfHiddenLayers; i++)
+    {
+        layer l = nn->hiddenLayers[i];
+        matrix tmp;
+        for (int j = 0; j < l.nbOfNeurons; j++)
+        {
+            matrix resNeuron;
+            multMat(resLayer, resLayerRows, resLayerCols, l.neurons[j].weights, resLayerCols, 1, resNeuron);
+            
+            for (int x = 0; x < resLayerRows; x++)
+            {
+                tmp[x][j] = resNeuron[x][0];
+            }
+        }
+        applyFunc(tmp, resLayerRows, l.nbOfNeurons, sigmoid, resLayer);
+        resLayerCols = l.nbOfNeurons;
+    }
+
+    layer output = nn->outputLayer;
+    matrix tmp;
+    for (int i = 0; i < output.nbOfNeurons; i++)
+    {
+        matrix resOutput;
+        multMat(resLayer, resLayerRows, resLayerCols, output.neurons[i].weights, resLayerCols, 1, resOutput);
+        for (int x = 0; x < resLayerRows; x++)
+        {
+            tmp[x][i] = resOutput[x][0];
+        }
+    }
+
+    applyFunc(tmp, resLayerRows, output.nbOfNeurons, sigmoid, result);
 }

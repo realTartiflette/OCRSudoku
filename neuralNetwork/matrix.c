@@ -24,6 +24,18 @@ void printMat(matrix mat, int rows, int cols)
     
 }
 
+void copyMat(matrix mat, int rows, int cols, matrix res)
+{
+    isInRange(rows, cols, "copyMat");
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            res[i][j] = mat[i][j];
+        }
+    }
+}
+
 void addMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matrix result)
 {
     isInRange(rowsA, colsA, "addMat");
@@ -90,7 +102,7 @@ void applyFunc(matrix A, int rows, int cols, float (*opp) (float), matrix result
     {
         for (int j = 0; j < cols; j++)
         {
-            result[j][i] = (*opp)(A[i][j]);
+            result[i][j] = (*opp)(A[i][j]);
         }
         
     }

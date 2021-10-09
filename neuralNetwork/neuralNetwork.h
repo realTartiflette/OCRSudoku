@@ -28,7 +28,9 @@ struct neuralNetwork
     struct layer outputLayer;
 };
 
-neuralNetwork createNeuralNetwork(int inputSize, int nbOfhidenLayers, int nbOfNeuronsByLayer[MAX_NEURON], int outputSize);
 void printNetwork(neuralNetwork nn);
 
+neuralNetwork createNeuralNetwork(int inputSize, int nbOfhidenLayers, int nbOfNeuronsByLayer[MAX_NEURON], int outputSize);
+
+void forwardPropagation(neuralNetwork *nn, matrix inputs, int nbOfInputElems, matrix result);
 #endif

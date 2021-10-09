@@ -1,7 +1,8 @@
 CC = gcc
 dependecies = main.o matrix.o neuralNetwork.o
+CFLAGS = -Wall -Wextra -Werror -O3
 main: $(dependecies)
-	gcc $(dependecies) -o main
+	gcc $(dependecies) -o main -lm
 	rm $(dependecies)
 
 main.o: neuralNetwork.h
