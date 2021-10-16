@@ -1,6 +1,11 @@
 #include <stdio.h> 
 #include "matrix.h"
 
+float getFloatRandom()
+{
+    return 2*((float)rand()/(float)(RAND_MAX)) - 1;
+}
+
 void isInRange(int rows, int cols, char *funcName)
 {
     if(rows > MAX_ROWS || rows <= 0 || cols > MAX_COlS || cols <= 0)
@@ -10,34 +15,41 @@ void isInRange(int rows, int cols, char *funcName)
     }
 }
 
-void printMat(matrix mat, int rows, int cols)
+void printMat(matrix mat)
 {
+    int rows = mat.rows, cols = mat.cols;
     isInRange(rows, cols, "printMat");
 
     for (int i = 0; i < rows; i++)
     {
         printf("| ");
         for (int j = 0; j < cols; j++)
-            printf("%f ", mat[i][j]);
+            printf("%f ", mat.mat[i][j]);
         printf("|\n");
     }
     
 }
 
-void copyMat(matrix mat, int rows, int cols, matrix res)
+void copyMat(matrix mat, matrix *res)
 {
+    int rows = mat.rows, cols = mat.cols;
     isInRange(rows, cols, "copyMat");
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
-            res[i][j] = mat[i][j];
+            res->mat[i][j] = mat.mat[i][j];
         }
     }
+
+    res->rows = mat.rows, res->cols = mat.cols;
 }
 
-void addMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matrix result)
+void addMat(matrix A, matrix B, matrix *result)
 {
+    int rowsA = A.rows, colsA = A.cols;
+    int rowsB = B.rows, colsB = B.cols;
+
     isInRange(rowsA, colsA, "addMat");
     isInRange(rowsB, colsB, "addMat");
 
@@ -50,13 +62,17 @@ void addMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matr
     for (int i = 0; i < rowsA; i++)
     {
         for (int j = 0; j < colsA; j++)
-            result[i][j] = A[i][j] + B[i][j];
+            result->mat[i][j] = A.mat[i][j] + B.mat[i][j];
     }
     
+    result->rows = A.rows, result->cols = A.cols;
 }
 
-void multMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, matrix result)
+void multMat(matrix A, matrix B, matrix *result)
 {
+    int rowsA = A.rows, colsA = A.cols;
+    int rowsB = B.rows, colsB = B.cols;
+
     isInRange(rowsA, colsA, "multMat");
     isInRange(rowsB, colsB, "multMat");
 
@@ -73,37 +89,58 @@ void multMat(matrix A, int rowsA, int colsA, matrix B, int rowsB, int colsB, mat
             float sum = 0;
             for (int k = 0; k < colsA; k++)
             {
-                sum += A[i][k]*B[k][j];
+                sum += A.mat[i][k]*B.mat[k][j];
             }
-            result[i][j] = sum;   
+            result->mat[i][j] = sum;   
         }
     }
+
+    result->rows = A.rows, result->cols = B.cols;
 }
 
-void transMat(matrix A, int rows, int cols, matrix result)
+void transMat(matrix A, matrix *result)
 {
+    int rows = A.rows, cols = A.cols;
     isInRange(rows, cols, "transMat");
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
-            result[j][i] = A[i][j];
+            result->mat[j][i] = A.mat[i][j];
         }
         
     }
+
+    result->rows = A.cols, result->cols = A.rows;
     
 }
 
-void applyFunc(matrix A, int rows, int cols, float (*opp) (float), matrix result)
+void applyFunc(matrix A, float (*opp) (float), matrix *result)
 {
+    int rows = A.rows, cols = A.cols;
     isInRange(rows, cols, "applyFunc");
 
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
-            result[i][j] = (*opp)(A[i][j]);
+            result->mat[i][j] = (*opp)(A.mat[i][j]);
         }
-        
+    }
+    result->rows = A.rows, result->cols = A.cols;
+}
+
+void fillMatWithRandom(matrix *mat)
+{
+    int rows = mat->rows, cols = mat->cols;
+
+    isInRange(rows, cols, "fillMatWithRandom");
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            mat->mat[i][j] = getFloatRandom();
+        }
     }
 }

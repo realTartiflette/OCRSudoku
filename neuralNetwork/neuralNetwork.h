@@ -6,17 +6,17 @@
 #define MAX_LAYER 10
 #define MAX_NEURON 10
 
-typedef struct neuron neuron;
-struct neuron
-{
-    matrix weights;
-};
+#define LEARNING_RATE 0.5
 
 typedef struct layer layer;
 struct layer
 {
+    int nbOfvariables;
     int nbOfNeurons;
-    struct neuron *neurons;
+    matrix weigths;
+    //matrix bias;
+    matrix resultLayer;
+
 };
 
 typedef struct neuralNetwork neuralNetwork;
@@ -32,5 +32,7 @@ void printNetwork(neuralNetwork nn);
 
 neuralNetwork createNeuralNetwork(int inputSize, int nbOfhidenLayers, int nbOfNeuronsByLayer[MAX_NEURON], int outputSize);
 
-void forwardPropagation(neuralNetwork *nn, matrix inputs, int nbOfInputElems, matrix result);
+void forwardPropagation(neuralNetwork *nn, matrix inputs, int nbOfInputElems, matrix *result);
+
+void backwardPropagation(neuralNetwork *nn, matrix inputs, int nbOfInputElems, matrix expectedResults, matrix results, int nbOfOutputsElems);
 #endif
