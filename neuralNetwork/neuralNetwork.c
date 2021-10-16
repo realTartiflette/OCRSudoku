@@ -104,12 +104,12 @@ void forwardPropagation(neuralNetwork *nn, matrix inputs, int nbOfInputElems, ma
     
     for (int i = 0; i < nn->nbOfHiddenLayers; i++)
     {
-        layer l = nn->hiddenLayers[i];
-        multMat(resLayer, l.weigths, &buffer);
+        layer *l = &(nn->hiddenLayers[i]);
+        multMat(resLayer, l->weigths, &buffer);
         
         applyFunc(buffer, sigmoid, &resLayer);
 
-        copyMat(resLayer, &(l.resultLayer));
+        copyMat(resLayer, &(l->resultLayer));
     }
 
     layer output = nn->outputLayer;
@@ -119,3 +119,82 @@ void forwardPropagation(neuralNetwork *nn, matrix inputs, int nbOfInputElems, ma
     applyFunc(buffer, sigmoid, result);
 }
 
+void backwardPropagation(neuralNetwork *nn, matrix inputs, matrix expectedResults, matrix results)
+{
+    matrix buffer;
+
+    matrix error;
+    matrix outputDelta;
+
+    // COPUTE ALL DELTAS
+
+    //output Layer delta
+    layer *output = &(nn->outputLayer); 
+    getError(expectedResults, results, &error);
+    
+    applyFunc(results, sigmoidPrime, &buffer);
+    
+    for (int i = 0; i < results.rows; i++)
+    {
+        for (int j = 0; j < results.cols; j++)
+        {
+            outputDelta.mat[i][j] = buffer.mat[i][j] * error.mat[i][j];
+        }
+    }
+    outputDelta.rows = results.rows, outputDelta.cols = results.cols;
+    
+    //hidden layers delta
+    matrix prevDelta;
+    copyMat(outputDelta, &prevDelta);
+
+    layer prevLayer = *output;
+    matrix hiddenDeltas[MAX_LAYER];
+
+    for (int i = nn->nbOfHiddenLayers - 1; i >= 0; i--)
+    {
+        //compute error
+        layer *l = &(nn->hiddenLayers[i]);
+        matrix layerError;
+        transMat(prevLayer.weigths, &buffer);
+        multMat(prevDelta, buffer, &layerError);
+
+        //compute delta
+        applyFunc(l->resultLayer, sigmoidPrime, &buffer);
+
+        for (int j = 0; j < layerError.rows; j++)
+        {
+            for (int k = 0; k < layerError.cols; k++)
+            {
+                hiddenDeltas[i].mat[j][k] = layerError.mat[j][k] * buffer.mat[j][k];
+            }  
+        }
+        hiddenDeltas[i].rows = layerError.rows, hiddenDeltas[i].cols = layerError.cols;
+        copyMat(hiddenDeltas[i], &prevDelta);
+
+        prevLayer = *l;
+    }
+    
+    // UPSATE WEIGHTS
+
+    // hidden layers
+    matrix prevResults;
+    copyMat(inputs, &prevResults);
+
+    for (int i = 0; i < nn->nbOfHiddenLayers; i++)
+    {
+        layer *l = &(nn->hiddenLayers[i]);
+        matrix trans;
+        transMat(prevResults, &trans);
+        multMat(trans, hiddenDeltas[i], &buffer);
+        addMat(l->weigths, buffer, &(l->weigths));
+
+        copyMat(l->resultLayer, &prevResults);
+    }
+    
+    // output Layer
+
+    matrix trans;
+    transMat(prevResults, &trans);
+    multMat(trans, outputDelta, &buffer);
+    addMat(output->weigths, buffer, &(output->weigths));
+}

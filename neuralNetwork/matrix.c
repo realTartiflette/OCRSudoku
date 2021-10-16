@@ -10,7 +10,7 @@ void isInRange(int rows, int cols, char *funcName)
 {
     if(rows > MAX_ROWS || rows <= 0 || cols > MAX_COlS || cols <= 0)
     {
-        printf("%s : rows or cols are to hight or < 0", funcName);
+        printf("%s : rows (%d) or cols(%d) are to hight or < 0 \n", funcName, rows, cols);
         exit(EXIT_FAILURE);
     }
 }

@@ -34,5 +34,5 @@ neuralNetwork createNeuralNetwork(int inputSize, int nbOfhidenLayers, int nbOfNe
 
 void forwardPropagation(neuralNetwork *nn, matrix inputs, int nbOfInputElems, matrix *result);
 
-void backwardPropagation(neuralNetwork *nn, matrix inputs, int nbOfInputElems, matrix expectedResults, matrix results, int nbOfOutputsElems);
+void backwardPropagation(neuralNetwork *nn, matrix inputs, matrix expectedResults, matrix results);
 #endif
