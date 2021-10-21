@@ -42,9 +42,9 @@ char* BlurMedian(char path[], int radius)
 			
 			unsigned int average = sum / ((2*radius+1)*(2*radius+1));
 			if (average < 65)
-				newPixel = SDL_MapRGB(img->format, 0, 0, 0);
-			else
 				newPixel = SDL_MapRGB(img->format, 255, 255, 255);
+			else
+				newPixel = SDL_MapRGB(img->format, 0, 0, 0);
 			
 			sum = 0;
 			PutPixel(newIMG, x, y, newPixel);
