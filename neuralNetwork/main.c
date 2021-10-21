@@ -3,40 +3,80 @@
 #include "neuralNetwork.h"
 int main()
 {
-	int n[MAX_LAYER] = {2};
-	neuralNetwork nn = createNeuralNetwork(2,1,n,1);
+	int n[MAX_LAYER] = {6, 4, 2};
+	neuralNetwork nn = createNeuralNetwork(5,3,n,1);
 	matrix inputs = 
 	{
-		4, //rows
-		2, //cols
+		14, //rows
+		5, //cols
 		{
-			{1,1},
-			{0,0},
-			{1,0},
-			{0,1}
+			{1,1,1,1,1},
+			{0,0,0,0,0},
+
+			{1,0,0,0,0},
+			{0,0,0,1,0},
+			{0,0,1,0,0},
+
+			{1,0,1,0,0},
+			{1,0,0,0,1},
+			{0,1,0,1,0},
+
+			{0,1,1,0,1},
+			{0,1,0,1,1},
+			{1,0,1,0,1},
+
+			{1,0,1,1,1},
+			{1,1,1,1,0},
+			{1,1,0,1,1}
 		}
 	};
 
 	matrix expectedResuls = {
-		4, //rows
+		14, //rows
 		1, //cols
 		{
 			{0},
+			{0},
 			{1},
 			{1},
-			{0}
+			{1},
+			{1},
+			{1},
+			{1},
+			{1},
+			{1},
+			{1},
+			{1},
+			{1},
+			{1},
 		}
 	};
 
-	for (long i = 0; i < 100000; i++)
-	{
-		matrix res;
-		forwardPropagation(&nn, inputs, 4, &res);
-		backwardPropagation(&nn, inputs, expectedResuls, res);
-	}
+	trainNetwork(&nn, inputs, expectedResuls, 3000);
 
 	matrix res;
-	forwardPropagation(&nn, inputs, 4, &res);
+
+	matrix test = 
+	{
+		8, //rows
+		5, //cols
+		{
+			{0,1,0,0,0},
+			{0,0,0,0,1},
+
+			{1,1,0,0,0},
+			{1,0,0,1,0},
+
+			{1,1,0,0,1},
+			{1,0,0,1,1},
+
+			{1,1,1,0,1},
+			{0,1,1,1,1}
+		}
+	};
+
+	forwardPropagation(&nn, test, &res);
+	printMat(test);
 	printMat(res);
 	return 0;
 }

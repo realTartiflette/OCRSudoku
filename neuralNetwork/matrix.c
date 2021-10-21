@@ -24,7 +24,7 @@ void printMat(matrix mat)
     {
         printf("| ");
         for (int j = 0; j < cols; j++)
-            printf("%f ", mat.mat[i][j]);
+            printf("%4g", mat.mat[i][j]);
         printf("|\n");
     }
     
@@ -55,7 +55,7 @@ void addMat(matrix A, matrix B, matrix *result)
 
     if(rowsA != rowsB || colsA != colsB)
     {
-        printf("addMat : rowsA != rowsB or colsA != colsB");
+        printf("addMat : rowsA != rowsB or colsA != colsB \n");
         exit(EXIT_FAILURE);
     }
 
@@ -78,7 +78,7 @@ void multMat(matrix A, matrix B, matrix *result)
 
     if(colsA != rowsB)
     {
-        printf("addMat : rowsA != rowsB or colsA != colsB");
+        printf("multMat : rowsA != rowsB or colsA != colsB\n");
         exit(EXIT_FAILURE);
     }
 
