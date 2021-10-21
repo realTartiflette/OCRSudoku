@@ -28,5 +28,8 @@ manipulatePixel.o:
 
 clean:
 	rm *.o
+	rm main
+	rm blurMedianPNG.png
+	rm grayscalePNG.png
 
 

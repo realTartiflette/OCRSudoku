@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_stdinc.h>
 #include <stdio.h> 
 #include <stdlib.h>
 #include "manipulatePixel.h"
@@ -15,14 +16,11 @@ char* BlurMedian(char path[], int radius)
 	SDL_Surface* newIMG = SDL_CreateRGBSurface(0, img->w, img->h, 32, 0, 0, 0 ,0);
 	char* namePNG = "blurMedianPNG.png";
 
-	Uint8 R[radius * radius];
-	Uint8 G[radius * radius];
-	Uint8 B[radius * radius];
-
+	unsigned int sum = 0;
 	Uint8 r;
 	Uint8 g;
 	Uint8 b;
-	int cpt = 0;
+	Uint32 newPixel;
 
 	for (int x = 0; x < img->w; x++)
 	{
@@ -34,28 +32,21 @@ char* BlurMedian(char path[], int radius)
 				{
 					if (i > 0 && i < img->w && j > 0 && j < img->h)
 					{
-						Uint8 tmpPixel = GetPixel(img, i, j);
+						Uint32 tmpPixel = GetPixel(img, i, j);
 						SDL_GetRGB(tmpPixel, img->format, &r, &g, &b);
-						R[cpt] = r;
-						G[cpt] = g;
-						B[cpt] = b;
+						sum += r + g + b;
 
 					}
-					cpt++;
-
 				}
 			}
-			cpt = 0;
-			int size = sizeof(R) / sizeof(*R);
-			qsort(R, size, sizeof(*R), comp);
-			qsort(G, size, sizeof(*G), comp);	
-			qsort(B, size, sizeof(*B), comp);
 			
-			r = R[size / 2];
-			g = G[size / 2];
-			b = B[size / 2];
-
-			Uint32 newPixel = SDL_MapRGB(img->format, r, g, b);
+			unsigned int average = sum / ((2*radius+1)*(2*radius+1));
+			if (average < 65)
+				newPixel = SDL_MapRGB(img->format, 0, 0, 0);
+			else
+				newPixel = SDL_MapRGB(img->format, 255, 255, 255);
+			
+			sum = 0;
 			PutPixel(newIMG, x, y, newPixel);
 		}
 	}

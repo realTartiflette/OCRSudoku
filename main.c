@@ -12,8 +12,8 @@ int main(int argc, char **argv)
 	{
 		
 		//openImage(argv[1]);
-		//Grayscale(argv[1]);
-		BlurMedian(argv[1], 3);
+		char* name = Grayscale(argv[1]);
+		BlurMedian(name, 1);
 		exit(EXIT_SUCCESS);
 
 	}	
