@@ -15,6 +15,10 @@ char* BlurMedian(char path[], int radius)
 	SDL_Surface* img = IMG_Load(path);
 	SDL_Surface* newIMG = SDL_CreateRGBSurface(0, img->w, img->h, 32, 0, 0, 0 ,0);
 	char* namePNG = "blurMedianPNG.png";
+	
+	int median[(img->w * img->h)/10];
+	uint k = 0;
+	
 
 	unsigned int sum = 0;
 	Uint8 r;
@@ -24,8 +28,27 @@ char* BlurMedian(char path[], int radius)
 
 	for (int x = 0; x < img->w; x++)
 	{
+		
 		for (int y = 0; y < img->h; y++)
 		{
+			if (k % 10 == 0)
+			{
+				Uint32 tmpPix = GetPixel(img, x, y);
+				SDL_GetRGB(tmpPix, img->format, &r, &g, &b);
+				median[k/10] = (r+g+b)/3;
+			}
+			k++;
+		}
+	}
+	mergeSort(median, 0, k/10);
+	int seuil = median[k/20];
+
+	for (int x = 0; x < img->w; x++)
+	{
+		
+		for (int y = 0; y < img->h; y++)
+		{
+		
 			for (int i = x - radius; i < x + radius; i++)
 			{
 				for (int j = y - radius; j < y + radius; j++)
@@ -41,7 +64,7 @@ char* BlurMedian(char path[], int radius)
 			}
 			
 			unsigned int average = sum / ((2*radius+1)*(2*radius+1));
-			if (average < 65)
+			if (average < (seuil))
 				newPixel = SDL_MapRGB(img->format, 255, 255, 255);
 			else
 				newPixel = SDL_MapRGB(img->format, 0, 0, 0);
@@ -51,6 +74,8 @@ char* BlurMedian(char path[], int radius)
 		}
 	}
 	
+	
+
 	IMG_SavePNG(newIMG, namePNG);
 	return namePNG;
 }
