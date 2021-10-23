@@ -10,7 +10,7 @@ char* Threshold(char path[], int radius)
 {
 	SDL_Surface* img = IMG_Load(path);
 	SDL_Surface* newIMG = SDL_CreateRGBSurface(0, img->w, img->h, 32, 0, 0, 0 ,0);
-	char* namePNG = "thresholdPNG.png";
+	char* namePNG = "results/thresholdPNG.png";
 	
 	int median[(img->w * img->h)/10];
 	uint k = 0;

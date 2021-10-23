@@ -7,7 +7,7 @@
 char* Grayscale(char path[])
 {
 	SDL_Surface* img = IMG_Load(path);
-	char* namePNG = "grayscalePNG.png";
+	char* namePNG = "results/grayscalePNG.png";
 
 	Uint8 r;
 	Uint8 g;

@@ -29,7 +29,7 @@ manipulatePixel.o:
 clean:
 	rm *.o
 	rm main
-	rm thresholdPNG.png
-	rm grayscalePNG.png
+	rm results/thresholdPNG.png
+	rm results/grayscalePNG.png
 
 
