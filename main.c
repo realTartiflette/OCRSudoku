@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "openImage.h"
 #include "grayscale.h"
-#include "blurMedian.h"
+#include "threshold.h"
 
 int main(int argc, char **argv)
 {
@@ -13,7 +13,7 @@ int main(int argc, char **argv)
 		
 		//openImage(argv[1]);
 		char* name = Grayscale(argv[1]);
-		BlurMedian(name, 1);
+		Threshold(name, 1);
 		exit(EXIT_SUCCESS);
 
 	}	
