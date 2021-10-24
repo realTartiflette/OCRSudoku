@@ -106,11 +106,12 @@ int solve_sudoku()
 
 
 
-int main(int argc,char* argv[])
+int main(int argc, char* argv[])
 {
     FILE* fichier = NULL;
-
-    fichier = fopen(argv[1], "r");
+    if (argc == 2)
+    {
+        fichier = fopen(argv[1], "r");
 
     char caractereActuel = ' ';
 
@@ -183,6 +184,7 @@ int main(int argc,char* argv[])
     else
         printf("No solution\n");
     return 0;
+    }
 }
 
 

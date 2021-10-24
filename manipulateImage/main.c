@@ -5,6 +5,8 @@
 #include "openImage.h"
 #include "grayscale.h"
 #include "blur.h"
+#include "threshold.h"
+#include "edgeDetector.h"
 
 int main(int argc, char **argv)
 {
@@ -12,7 +14,9 @@ int main(int argc, char **argv)
 	{
 	
 		char* name = Grayscale(argv[1]);
-		GaussianBlur(name);
+		name = GaussianBlur(name);
+		name = Threshold(name, 1);
+		name = detectLine(name);
 		exit(EXIT_SUCCESS);
 
 	}	
