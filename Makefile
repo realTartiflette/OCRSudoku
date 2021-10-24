@@ -33,7 +33,6 @@ edgeDetector.o:
 clean:
 	rm *.o
 	rm main
-	rm results/thresholdPNG.png
-	rm results/grayscalePNG.png
+	rm results/*
 
 
