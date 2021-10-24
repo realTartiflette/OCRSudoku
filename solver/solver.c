@@ -113,77 +113,77 @@ int main(int argc, char* argv[])
     {
         fichier = fopen(argv[1], "r");
 
-    char caractereActuel = ' ';
+        char caractereActuel = ' ';
 
-    if (fichier != NULL)
-    {
-        int i=0;
-        int j=0;
-        // Boucle de lecture des caractères un à un
-        do
+        if (fichier != NULL)
         {
-            caractereActuel = fgetc(fichier); // On lit le caractère
-            if (j==9)
+            int i=0;
+            int j=0;
+            // Boucle de lecture des caractères un à un
+            do
             {
-                j=0;
-                i=i+1;
-            }
+                caractereActuel = fgetc(fichier); // On lit le caractère
+                if (j==9)
+                {
+                    j=0;
+                    i=i+1;
+                }
 
-            if (caractereActuel=='.')
-            {
-                matrix[i][j]=0;
-                j=j+1;
-            }
-            else if(caractereActuel=='1' || caractereActuel=='2'|| caractereActuel=='3'|| caractereActuel=='4'|| caractereActuel=='5'|| caractereActuel=='6'|| caractereActuel=='7'|| caractereActuel=='8'|| caractereActuel=='9')
-            {
-                matrix[i][j]=(int)caractereActuel-48;
-                j=j+1;
-            }
-            //printf("%c", caractereActuel); // On l'affiche
-
-
-
-        } while (caractereActuel != EOF && i!=9); // On continue tant que fgetc n'a pas retourné EOF (fin de fichier)
- 
-        fclose(fichier);
-    }
+                if (caractereActuel=='.')
+                {
+                    matrix[i][j]=0;
+                    j=j+1;
+                }
+                else if(caractereActuel=='1' || caractereActuel=='2'|| caractereActuel=='3'|| caractereActuel=='4'|| caractereActuel=='5'|| caractereActuel=='6'|| caractereActuel=='7'|| caractereActuel=='8'|| caractereActuel=='9')
+                {
+                    matrix[i][j]=(int)caractereActuel-48;
+                    j=j+1;
+                }
+                //printf("%c", caractereActuel); // On l'affiche
 
 
 
-    if (solve_sudoku(matrix))
-    {
-        FILE* newfichier= fopen(strcat(argv[1],".result"),"w");
-        for (int i = 0; i < 9; ++i)
+            } while (caractereActuel != EOF && i!=9); // On continue tant que fgetc n'a pas retourné EOF (fin de fichier)
+    
+            fclose(fichier);
+        }
+
+
+
+        if (solve_sudoku(matrix))
         {
-            if (i%3==0 && i!=0)
+            FILE* newfichier= fopen(strcat(argv[1],".result"),"w");
+            for (int i = 0; i < 9; ++i)
             {
+                if (i%3==0 && i!=0)
+                {
+                    fputc('\n',newfichier);
+                }
+                for (int j=0;j<9;j++)
+                {
+                    if (j%3==0)
+                    {
+                        fputc(' ',newfichier);
+                    }
+                    int n=matrix[i][j];
+                    if (n==0)
+                    {
+                        fputc('.',newfichier);
+                    }
+                    else
+                    {
+                        caractereActuel=matrix[i][j]+48;
+                        fputc(((char)caractereActuel),newfichier);
+                    }
+                }
                 fputc('\n',newfichier);
             }
-            for (int j=0;j<9;j++)
-            {
-                if (j%3==0)
-                {
-                    fputc(' ',newfichier);
-                }
-                int n=matrix[i][j];
-                if (n==0)
-                {
-                    fputc('.',newfichier);
-                }
-                else
-                {
-                    caractereActuel=matrix[i][j]+48;
-                    fputc(((char)caractereActuel),newfichier);
-                }
-            }
-            fputc('\n',newfichier);
         }
-    }
 
 
-    else
-        printf("No solution\n");
-    return 0;
+        else
+            printf("No solution\n");
+        return 0;
     }
 }
 
