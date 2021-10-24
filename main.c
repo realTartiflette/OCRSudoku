@@ -4,14 +4,15 @@
 #include <stdlib.h>
 #include "openImage.h"
 #include "grayscale.h"
+#include "blur.h"
 
 int main(int argc, char **argv)
 {
 	if (argc == 2)
 	{
-		
-		//openImage(argv[1]);
-		Grayscale(argv[1]);
+	
+		char* name = Grayscale(argv[1]);
+		GaussianBlur(name);
 		exit(EXIT_SUCCESS);
 
 	}	
