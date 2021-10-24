@@ -28,7 +28,7 @@ char* Grayscale(char path[])
 		}
 	}
 	
-
-	IMG_SavePNG(newIMG, name);
+	IMG_SaveJPG(newIMG, name, 100);
+	//IMG_SavePNG(newIMG, name);
 	return name;
 }
