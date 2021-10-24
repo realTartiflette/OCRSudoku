@@ -34,8 +34,6 @@ edgeDetector.o:
 
 
 clean:
-	rm *.o
-	rm results/*
-	rm main
+	rm *.o results/* main
 
 

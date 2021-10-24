@@ -27,20 +27,20 @@ int maximum(int x,int y)
 
 static Uint32 moyenne(SDL_Surface *surface, int i, int j, int n)
 {
-    const int initial_h = maximum(i - n, 0);
-    const int initial_w = maximum(j - n, 0);
-    const int final_h = minimum(i + n, surface->h - 1);
-    const int final_w = minimum(j + n, surface->w - 1);
+    const int initial_h = maximum(j - n, 0);
+    const int initial_w = maximum(i- n, 0);
+    const int final_h = minimum(j + n, surface->h - 1);
+    const int final_w = minimum(i + n, surface->w - 1);
     const int nb_pixel = ((final_h - initial_h) * (final_w -initial_w));
     const Uint32 *p = surface->pixels;
 
 
     Uint32 sum_r = 0, sum_g = 0, sum_b = 0;
     SDL_Color color;
-    for (i = initial_h; i < final_h; i++)
-        for(j = initial_w; j < final_w; j++)
+    for (int x = initial_w; x < final_w; x++)
+        for(int y = initial_h; y < final_h; y++)
         {
-            Uint32 pixel = GetPixel(surface, i,j );
+            Uint32 pixel = GetPixel(surface, x, y);
             SDL_GetRGB(pixel, surface->format, &color.r, &color.g, &color.b);
             sum_r += color.r;
             sum_g += color.g;
