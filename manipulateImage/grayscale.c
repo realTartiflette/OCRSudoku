@@ -4,14 +4,16 @@
 #include <stdlib.h>
 #include "manipulatePixel.h"
 
+
+
+
 char* Grayscale(char path[])
 {
-	SDL_Surface* img = IMG_Load(path);
-	char* name = "results/grayscaleIMG.jpg";
-	SDL_Surface* newIMG = SDL_CreateRGBSurface(0, img->w, img->h, 32, 0, 0, 0 ,0);
+    SDL_Surface* img = IMG_Load(path);
+    char* name = "results/grayscaleIMG.jpg";
+	//SDL_Surface* newIMG = SDL_CreateRGBSurface(0, img->w, img->h, 32, 0, 0, 0 ,0);
 
-
-	Uint8 r;
+    Uint8 r;
 	Uint8 g;
 	Uint8 b;
 
@@ -23,12 +25,12 @@ char* Grayscale(char path[])
 			SDL_GetRGB(pixel, img->format, &r, &g, &b);
 			Uint8 gray = (Uint8)(r * 0.3f + g * 0.59f + b * 0.11f);
 			Uint32 averagePixel = SDL_MapRGB(img->format, gray, gray, gray);
-			PutPixel(newIMG, x, y, averagePixel);		
+			PutPixel(img, x, y, averagePixel);		
 			
 		}
 	}
-	
-	IMG_SaveJPG(newIMG, name, 100);
+
+    IMG_SaveJPG(img, name, 100);
 	//IMG_SavePNG(newIMG, name);
 	return name;
 }
