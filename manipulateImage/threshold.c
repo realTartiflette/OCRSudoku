@@ -91,13 +91,13 @@ char* Threshold(char path[], int radius)
 			Uint32 tmpPix = GetPixel(img, x, y);
 			SDL_GetRGB(tmpPix, img->format, &r, &g, &b);
 			sum = (r+g+b)/3;
-			if (sum < 51)
+			if (sum < 52)
 				tier1++;
-			if (sum < 103)
+			else if (sum < 103)
 				tier2++;
-			if (sum < 154)
+			else if (sum < 154)
 				tier3++;
-			if (sum < 205)
+			else if (sum < 205)
 				tier4++;
 			else
 				tier5++;
@@ -110,13 +110,15 @@ char* Threshold(char path[], int radius)
 	if (((float)tier1/nbPixel) > 0.05)
 		ref = 80;
 	else if (((float)tier2/nbPixel) > 0.05)
-		ref = 110;
+		ref = 180; //110
 	else if (((float)tier3/nbPixel) > 0.05)
 		ref = 135;
 	else if (((float)tier4/nbPixel) > 0.05)
 		ref = 180;
 	else 
 		ref = 210;
+	
+	printf("%i", ref);
 	
 	for (int x = 0; x < img->w; x++)
 	{

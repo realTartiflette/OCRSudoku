@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Nov 16 13:01:34 2021
+# Make data base, printed on Tue Nov 16 14:10:50 2021
 
 # Variables
 
@@ -15,7 +15,7 @@ GDK_BACKEND = x11
 # environment
 LC_ALL = C
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-637d0fa6-b28d-44c0-ad5d-65ad48fb3678.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-3c025092-0139-40a9-a5d1-707b12c4ea12.sock
 # environment
 VSCODE_CWD = /home/kali
 # environment
@@ -31,6 +31,7 @@ QT_ACCESSIBILITY = 1
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # environment
+ 
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
 .VARIABLES := 
@@ -97,8 +98,7 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
- 
-VSCODE_PID = 1365
+VSCODE_PID = 5042
 # environment
 XDG_SESSION_TYPE = x11
 # automatic
@@ -208,7 +208,6 @@ _JAVA_OPTIONS = -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
- 
 VSCODE_IPC_HOOK = /run/user/1000/vscode-125179f7-1.56.1-main.sock
 # environment
 XDG_SESSION_ID = 2
@@ -245,9 +244,9 @@ GDMSESSION = lightdm-xsession
 
 # Directories
 
-# . (device 2049, inode 1058230): 22 files, no impossibilities.
+# . (device 2049, inode 1058230): 14 files, no impossibilities.
 
-# 22 files, no impossibilities in 1 directories.
+# 14 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -271,18 +270,15 @@ manipulateImage/openImage.h:
 
 openImage.o:
 #  Implicit rule search has not been done.
-#  Last modified 2021-11-16 12:59:11.197803193
-#  File has been updated.
-#  Successfully updated.
+#  Modification time never checked.
+#  File has not been updated.
 #  recipe to execute (from 'Makefile', line 38):
 	gcc -c -g manipulateImage/openImage.c -lSDL2 -lSDL2main -lSDL2_image
 
 threshold.o:
 #  Implicit rule search has not been done.
- 
-#  Last modified 2021-11-16 12:59:12.705804672
-#  File has been updated.
-#  Successfully updated.
+#  Modification time never checked.
+#  File has not been updated.
 #  recipe to execute (from 'Makefile', line 46):
 	gcc -c -g manipulateImage/threshold.c -lSDL2 -lSDL2main -lSDL2_image
 
@@ -293,10 +289,9 @@ manipulatePixel: manipulatePixel.o
 
 # Not a target:
 neuralNetwork:
-#  Implicit rule search has been done.
-#  Last modified 2021-10-31 19:02:35.187229648
-#  File has been updated.
-#  Successfully updated.
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 neuralNetwork.o: neuralNetwork/neuralNetwork.h
 #  Implicit rule search has not been done.
@@ -314,9 +309,9 @@ manipulateImage/grayscale.h:
 
 blur.o:
 #  Implicit rule search has not been done.
-#  Last modified 2021-11-16 12:59:12.313804293
-#  File has been updated.
-#  Successfully updated.
+#  Modification time never checked.
+#  File has not been updated.
+ 
 #  recipe to execute (from 'Makefile', line 44):
 	gcc -c -g manipulateImage/blur.c -lSDL2 -lSDL2main -lSDL2_image
 
@@ -364,25 +359,21 @@ threshold: threshold.o manipulatePixel.o
 
 # Not a target:
 solverSudoku/solver.c:
-#  Implicit rule search has been done.
-#  Last modified 2021-10-31 19:02:35.187229648
-#  File has been updated.
-#  Successfully updated.
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 edgeDetector.o:
 #  Implicit rule search has not been done.
-#  Last modified 2021-11-16 12:59:13.169805116
- 
-#  File has been updated.
-#  Successfully updated.
+#  Modification time never checked.
+#  File has not been updated.
 #  recipe to execute (from 'Makefile', line 48):
 	gcc -c -g manipulateImage/edgeDetector.c -lSDL2 -lSDL2main -lSDL2_image
 
 manipulatePixel.o:
 #  Implicit rule search has not been done.
-#  Last modified 2021-11-16 12:59:11.517803511
-#  File has been updated.
-#  Successfully updated.
+#  Modification time never checked.
+#  File has not been updated.
 #  recipe to execute (from 'Makefile', line 42):
 	gcc -c -g manipulateImage/manipulatePixel.c -lSDL2 -lSDL2main -lSDL2_image
 
@@ -401,11 +392,8 @@ cutting: cutting.o cut.o manipulatePixel.o
 
 solver: solver.o
 #  Implicit rule search has not been done.
-#  File does not exist.
-#  File has been updated.
-#  Needs to be updated (-q is set).
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/3=0%
+#  Modification time never checked.
+#  File has not been updated.
 #  recipe to execute (from 'Makefile', line 22):
 	gcc solver.o -o solver
 
@@ -431,9 +419,11 @@ Cutting/manipulatePixel.h:
 
 image: image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o edgeDetector.o
 #  Implicit rule search has not been done.
-#  Last modified 2021-11-16 12:59:13.257805197
+#  File does not exist.
 #  File has been updated.
-#  Successfully updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/3=0%
 #  recipe to execute (from 'Makefile', line 16):
 	gcc -g $(dependeciesImage) $(LDLIBS) -o image -lm
 
@@ -466,9 +456,28 @@ network.o: neuralNetwork/neuralNetwork.h
 
 image.o: manipulateImage/openImage.h manipulateImage/grayscale.h
 #  Implicit rule search has not been done.
-#  Last modified 2021-11-16 12:59:10.897802894
+#  Implicit/static pattern stem: ''
+#  File does not exist.
 #  File has been updated.
-#  Successfully updated.
+#  Needs to be updated (-q is set).
+# automatic
+# @ := image.o
+# automatic
+# * := 
+# automatic
+# < := manipulateImage/openImage.h
+# automatic
+# + := manipulateImage/openImage.h manipulateImage/grayscale.h
+# automatic
+# % := 
+# automatic
+# ^ := manipulateImage/openImage.h manipulateImage/grayscale.h
+# automatic
+# ? := manipulateImage/openImage.h manipulateImage/grayscale.h
+# automatic
+# | := 
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=1/11=9%
 #  recipe to execute (from 'Makefile', line 36):
 	gcc -c -g manipulateImage/image.c -lSDL2 -lSDL2main -lSDL2_image
 
@@ -480,9 +489,8 @@ Blur.o:
 
 grayscale.o: manipulateImage/manipulatePixel.h
 #  Implicit rule search has not been done.
-#  Last modified 2021-11-16 12:59:11.845803837
-#  File has been updated.
-#  Successfully updated.
+#  Modification time never checked.
+#  File has not been updated.
 #  recipe to execute (from 'Makefile', line 40):
 	gcc -c -g manipulateImage/grayscale.c -lSDL2 -lSDL2main -lSDL2_image
 
@@ -494,28 +502,8 @@ neuralNetwork/matrix.h:
 
 solver.o: solverSudoku/solver.c
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: ''
-#  File does not exist.
-#  File has been updated.
-#  Needs to be updated (-q is set).
-# automatic
-# @ := solver.o
-# automatic
-# * := 
-# automatic
-# < := solverSudoku/solver.c
-# automatic
-# + := solverSudoku/solver.c
-# automatic
-# % := 
-# automatic
-# ^ := solverSudoku/solver.c
-# automatic
-# ? := solverSudoku/solver.c
-# automatic
-# | := 
-# variable set hash-table stats:
-# Load=8/32=25%, Rehash=0, Collisions=1/11=9%
+#  Modification time never checked.
+#  File has not been updated.
 #  recipe to execute (from 'Makefile', line 61):
 	gcc -c solverSudoku/solver.c
 
@@ -544,10 +532,9 @@ openImage: openImage.o
 
 # Not a target:
 manipulateImage/manipulatePixel.h:
-#  Implicit rule search has been done.
-#  Last modified 2021-10-31 19:02:35.187229648
-#  File has been updated.
-#  Successfully updated.
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # files hash-table stats:
 # Load=40/1024=4%, Rehash=0, Collisions=0/106=0%
@@ -557,13 +544,12 @@ manipulateImage/manipulatePixel.h:
 
 # No general ('VPATH' variable) search path.
 
- 
 # strcache buffers: 1 (0) / strings = 53 / storage = 644 B / avg = 12 B
 # current buf: size = 8162 B / used = 644 B / count = 53 / avg = 12 B
 
-# strcache performance: lookups = 120 / hit rate = 55%
+# strcache performance: lookups = 112 / hit rate = 52%
 # hash-table stats:
-# Load=53/8192=1%, Rehash=0, Collisions=0/120=0%
-# Finished Make data base on Tue Nov 16 13:01:34 2021
+# Load=53/8192=1%, Rehash=0, Collisions=0/112=0%
+# Finished Make data base on Tue Nov 16 14:10:50 2021
 
  

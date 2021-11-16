@@ -1,5 +1,13 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/kali/Documents/OCRSudoku'
+gcc -c -g manipulateImage/image.c -lSDL2 -lSDL2main -lSDL2_image
+gcc -c -g manipulateImage/openImage.c -lSDL2 -lSDL2main -lSDL2_image
+gcc -c -g manipulateImage/manipulatePixel.c -lSDL2 -lSDL2main -lSDL2_image
+gcc -c -g manipulateImage/grayscale.c -lSDL2 -lSDL2main -lSDL2_image
+gcc -c -g manipulateImage/blur.c -lSDL2 -lSDL2main -lSDL2_image
+gcc -c -g manipulateImage/threshold.c -lSDL2 -lSDL2main -lSDL2_image
+gcc -c -g manipulateImage/edgeDetector.c -lSDL2 -lSDL2main -lSDL2_image
+gcc -g image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o edgeDetector.o `pkg-config --libs sdl2` -lSDL2_image -o image -lm
 gcc -c neuralNetwork/neuralNetwork.c
 gcc   neuralNetwork.o  `pkg-config --libs sdl2` -lSDL2_image -o neuralNetwork
 gcc -c solverSudoku/solver.c
