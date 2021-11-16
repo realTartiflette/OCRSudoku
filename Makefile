@@ -16,7 +16,7 @@ image: $(dependeciesImage)
 	gcc $(dependeciesImage) $(LDLIBS) -o image -lm
 
 network: $(dependeciesNN)
-	gcc $(dependeciesNN) -o network -lm
+	gcc $(dependeciesNN) -o network -lm -g
 
 solver: solver.o
 	gcc solver.o -o solver
@@ -50,11 +50,11 @@ edgeDetector.o:
 #neural network
 
 network.o: neuralNetwork/neuralNetwork.h
-	gcc -c neuralNetwork/network.c
+	gcc -c neuralNetwork/network.c -g
 matrix.o: neuralNetwork/matrix.h
-	gcc -c neuralNetwork/matrix.c
+	gcc -c neuralNetwork/matrix.c -g
 neuralNetwork.o: neuralNetwork/neuralNetwork.h
-	gcc -c neuralNetwork/neuralNetwork.c
+	gcc -c neuralNetwork/neuralNetwork.c -g
 
 #solver
 solver.o: solverSudoku/solver.c

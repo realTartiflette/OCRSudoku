@@ -1,5 +1,6 @@
 #include "neuralNetwork.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <time.h>
 
@@ -11,6 +12,11 @@ float sigmoid(float x)
 float sigmoidPrime (float x)
 {
     return x * (1 - x);
+}
+
+float learningRate(float x)
+{
+    return LEARNING_RATE * x;
 }
 
 void getError (matrix *expected, matrix *output, matrix *error)
@@ -26,19 +32,19 @@ void getError (matrix *expected, matrix *output, matrix *error)
     error->rows = expected->rows, error->cols = expected->cols;
 }
 
-void printNetwork(neuralNetwork nn)
+void printNetwork(neuralNetwork *nn)
 {
     printf("    ");
-    for (int i = 0; i < nn.inputSize; i++)
+    for (int i = 0; i < nn->inputSize; i++)
     {
         printf("o ");
     }
     printf("\n\n");
 
-    for (int i = 0; i < nn.nbOfHiddenLayers; i++)
+    for (int i = 0; i < nn->nbOfHiddenLayers; i++)
     {
         printf("    ");
-        for (int j = 0; j < nn.hiddenLayers[i].weigths.cols; j++)
+        for (int j = 0; j < nn->hiddenLayers[i].weigths->cols; j++)
         {
             printf("o ");
         }
@@ -47,7 +53,7 @@ void printNetwork(neuralNetwork nn)
     }
 
     printf("    ");
-    for (int i = 0; i < nn.outputLayer.weigths.cols; i++)
+    for (int i = 0; i < nn->outputLayer->weigths->cols; i++)
     {
         printf("o ");
     }
@@ -55,157 +61,217 @@ void printNetwork(neuralNetwork nn)
     
 }
 
-neuralNetwork createNeuralNetwork(int inputSize, int nbOfhidenLayers, int nbOfNeuronsByLayer[MAX_NEURON], int outputSize)
+neuralNetwork *createNeuralNetwork(int inputSize, int nbOfhidenLayers, int nbOfNeuronsByLayer[MAX_NEURON], int outputSize)
 {
-    layer layers[MAX_LAYER];
-
+    layer *layers = calloc(nbOfhidenLayers, sizeof(layer));
     srand((unsigned int) time(NULL));
 
     int prevWeigthSize = inputSize;
     for (int i = 0; i < nbOfhidenLayers; i++)
     {
         layer l;
+        l.weigths = malloc(sizeof(matrix));
+        l.bias = calloc(nbOfNeuronsByLayer[i], sizeof(float));
+        l.resultLayer = malloc(sizeof(matrix));
 
-        l.weigths.rows = prevWeigthSize, l.weigths.cols = nbOfNeuronsByLayer[i];
-        fillMatWithRandom(&(l.weigths));
+        l.weigths->rows = prevWeigthSize;
+        l.weigths->cols = nbOfNeuronsByLayer[i];
+        fillMatWithRandom(l.weigths);
+
+        for (int j = 0; j < nbOfNeuronsByLayer[i]; j++)
+        {
+            l.bias[j] = 2*((float)rand()/(float)(RAND_MAX)) - 1;
+        }
         
         layers[i] = l;
         prevWeigthSize = nbOfNeuronsByLayer[i];
     }
     
-    layer outputLayer;
+    layer *outputLayer = malloc(sizeof(layer));
 
-    outputLayer.weigths.rows = prevWeigthSize, outputLayer.weigths.cols = outputSize;
-    fillMatWithRandom(&(outputLayer.weigths));
+    outputLayer->weigths = malloc(sizeof(matrix));
+    outputLayer->resultLayer = malloc(sizeof(matrix));
+    outputLayer->bias = calloc(outputSize, sizeof(float));
+
+    outputLayer->weigths->rows = prevWeigthSize, outputLayer->weigths->cols = outputSize;
+    fillMatWithRandom(outputLayer->weigths);
     
-    neuralNetwork nn = 
+    for (int i = 0; i < outputSize; i++)
     {
-        inputSize,
-        nbOfhidenLayers,
-        layers,
-        outputLayer
-    };
+        outputLayer->bias[i] = 2*((float)rand()/(float)(RAND_MAX)) - 1;
+    }
+    
+    neuralNetwork *nn = malloc(sizeof(neuralNetwork));
+
+    nn->inputSize = inputSize;
+    nn->nbOfHiddenLayers = nbOfhidenLayers;
+    nn->hiddenLayers = layers;
+    nn->outputLayer = outputLayer;
 
     return nn;
 }
 
-void forwardPropagation(neuralNetwork *nn, matrix inputs, matrix *result)
+void freeNetwork(neuralNetwork *nn)
 {
-    matrix buffer;
+    for (int i = 0; i < nn->nbOfHiddenLayers; i++)
+    {
+        free(nn->hiddenLayers[i].weigths);
+        free(nn->hiddenLayers[i].bias);
+        free(nn->hiddenLayers[i].resultLayer);
+    }
     
-    matrix resLayer;
-    resLayer.rows = inputs.rows;
-    resLayer.cols = nn->inputSize;
-    copyMat(inputs, &resLayer);
+    free(nn->hiddenLayers);
+    free(nn->outputLayer->bias);
+    free(nn->outputLayer);
+    free(nn);
+}
+
+void forwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *result)
+{
+    matrix *buffer = malloc(sizeof(matrix));
+    
+    matrix *resLayer = inputs; 
     
     for (int i = 0; i < nn->nbOfHiddenLayers; i++)
     {
         layer *l = &(nn->hiddenLayers[i]);
-        multMat(resLayer, l->weigths, &buffer);
+        multMat(resLayer, l->weigths, buffer);
+        for (int k = 0; k < buffer->cols; k++)
+        {
+            for (int j = 0; j < buffer->rows; j++)
+            {
+                buffer->mat[j][k] += l->bias[k];
+            }
+            
+        }
         
-        applyFunc(buffer, sigmoid, &resLayer);
+        applyFunc(buffer, sigmoid, l->resultLayer);
 
-        copyMat(resLayer, &(l->resultLayer));
+        resLayer = l->resultLayer;
     }
     
-    layer output = nn->outputLayer;
+    layer *output = nn->outputLayer;
 
-    multMat(resLayer, output.weigths, &buffer);
+    multMat(resLayer, output->weigths, buffer);
 
+    for (int j = 0; j < buffer->cols; j++)
+    {
+        for (int i = 0; i < buffer->rows; i++)
+        {
+            buffer->mat[i][j] += output->bias[j];
+        }
+    }
+    
     applyFunc(buffer, sigmoid, result);
+    
+    free(buffer);
 }
 
-void backwardPropagation(neuralNetwork *nn, matrix inputs, matrix expectedResults, matrix results)
+void backwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *expectedResults, matrix *results)
 {
     
-    matrix buffer;
+    matrix *buffer = malloc(sizeof(matrix));
 
-    matrix error;
-    matrix outputDelta;
+    matrix *error = malloc(sizeof(matrix));
+    matrix *outputDelta = malloc(sizeof(matrix));
 
     // COMPUTE ALL DELTAS
     
     //output Layer delta
-    layer *output = &(nn->outputLayer);
-    getError(&expectedResults, &results, &error);
-    applyFunc(results, sigmoidPrime, &buffer);
+    layer *output = nn->outputLayer;
+    getError(expectedResults, results, error);
+    applyFunc(results, sigmoidPrime, buffer);
     
-    for (int i = 0; i < results.rows; i++)
+    for (int i = 0; i < results->rows; i++)
     {
-        for (int j = 0; j < results.cols; j++)
+        for (int j = 0; j < results->cols; j++)
         {
-            outputDelta.mat[i][j] = buffer.mat[i][j] * error.mat[i][j];
+            outputDelta->mat[i][j] = buffer->mat[i][j] * error->mat[i][j];
         }
     }
-    outputDelta.rows = results.rows, outputDelta.cols = results.cols;
+    outputDelta->rows = results->rows, outputDelta->cols = results->cols;
+
+    free(error);
     
     //hidden layers delta
-    matrix prevDelta;
-    copyMat(outputDelta, &prevDelta);
-    
-    matrix prevWeights;
-    copyMat(output->weigths, &prevWeights);
-    
-    matrix hiddenDeltas[MAX_LAYER];
+    matrix *prevDelta = outputDelta;
+    matrix *prevWeights = output->weigths;
+    matrix *hiddenDeltas = calloc(nn->nbOfHiddenLayers, sizeof(matrix)); //[MAX_LAYER];
+    matrix *layerError = malloc(sizeof(matrix));
 
     for (int i = nn->nbOfHiddenLayers - 1; i >= 0; i--)
     {
         //compute error
         layer *l = &(nn->hiddenLayers[i]);
-        matrix layerError;
-        transMat(prevWeights, &buffer);
-        multMat(prevDelta, buffer, &layerError);
+        
+        transMat(prevWeights, buffer);
+        multMat(prevDelta, buffer, layerError);
 
         //compute delta
-        applyFunc(l->resultLayer, sigmoidPrime, &buffer);
-        
+        applyFunc(l->resultLayer, sigmoidPrime, buffer);
 
-        for (int j = 0; j < layerError.rows; j++)
+        for (int j = 0; j < layerError->rows; j++)
         {
-            for (int k = 0; k < layerError.cols; k++)
+            for (int k = 0; k < layerError->cols; k++)
             {
-                hiddenDeltas[i].mat[j][k] = layerError.mat[j][k] * buffer.mat[j][k];
+                hiddenDeltas[i].mat[j][k] = layerError->mat[j][k] * buffer->mat[j][k];
             }  
         }
-        hiddenDeltas[i].rows = layerError.rows, hiddenDeltas[i].cols = layerError.cols;
-        copyMat(hiddenDeltas[i], &prevDelta);
-        copyMat(l->weigths, &prevWeights);
+        hiddenDeltas[i].rows = layerError->rows, hiddenDeltas[i].cols = layerError->cols;
+        prevDelta = &hiddenDeltas[i];
+        prevWeights = l->weigths;
         
     }
+
+    free(layerError);
     
-    // UPSATE WEIGHTS
+    // UPSATE WEIGHTS AND BIAS
 
     // hidden layers
-    matrix prevResults;
-    copyMat(inputs, &prevResults);
-
+    matrix *prevResults = inputs;
+    matrix *trans = malloc(sizeof(matrix));
+    
     for (int i = 0; i < nn->nbOfHiddenLayers; i++)
     {
+        //update weights
         layer *l = &(nn->hiddenLayers[i]);
-        matrix trans;
-        transMat(prevResults, &trans);
-        multMat(trans, hiddenDeltas[i], &buffer);
-        addMat(l->weigths, buffer, &(l->weigths));
+        transMat(prevResults, trans);
+        multMat(trans, &hiddenDeltas[i], buffer);
+        applyFunc(buffer, learningRate, buffer);
+        addMat(l->weigths, buffer, l->weigths);
 
-        copyMat(l->resultLayer, &prevResults);
+        //update bias
+        for (int k = 0; k < hiddenDeltas[i].cols; k++)
+        {
+            float sum = 0;
+            for (int j = 0; j < hiddenDeltas[i].rows; j++)
+            {
+                sum += hiddenDeltas[i].mat[j][k];
+            }
+            l->bias[k] += LEARNING_RATE * sum;
+        }
+        
+        prevResults = l->resultLayer;
     }
     
     // output Layer
-
-    matrix trans;
-    transMat(prevResults, &trans);
-    multMat(trans, outputDelta, &buffer);
-    addMat(output->weigths, buffer, &(output->weigths));
+    transMat(prevResults, trans);
+    multMat(trans, outputDelta, buffer);
+    applyFunc(buffer, learningRate, buffer);
+    addMat(output->weigths, buffer, output->weigths);
+    free(buffer);
+    free(outputDelta);
+    free(hiddenDeltas);
+    free(trans);
 }
 
-void trainNetwork(neuralNetwork *nn, matrix inputs, matrix expectedResults, long nbOIter)
+void trainNetwork(neuralNetwork *nn, matrix *inputs, matrix *expectedResults, long nbOIter)
 {
+    matrix *res = malloc(sizeof(matrix));
     for (long i = 0; i < nbOIter; i++)
     {
-        matrix res;
-        forwardPropagation(nn, inputs, &res);
+        forwardPropagation(nn, inputs, res);
         backwardPropagation(nn, inputs, expectedResults, res);
-        printMat(res);
-        printf("\n");
     }
+    free(res);
 }
