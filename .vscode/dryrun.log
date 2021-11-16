@@ -1,0 +1,11 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory '/home/kali/Documents/OCRSudoku'
+gcc -c neuralNetwork/neuralNetwork.c
+gcc   neuralNetwork.o  `pkg-config --libs sdl2` -lSDL2_image -o neuralNetwork
+gcc -c solverSudoku/solver.c
+gcc solver.o -o solver
+gcc -c Cutting/cutting.c -lSDL2 -lSDL2main -lSDL2_image
+gcc -c Cutting/cut.c -lSDL2 -lSDL2main -lSDL2_image
+gcc cutting.o cut.o manipulatePixel.o `pkg-config --libs sdl2` -lSDL2_image -o cutting -lm
+make: Leaving directory '/home/kali/Documents/OCRSudoku'
+ 

@@ -13,7 +13,7 @@ LDLIBS = `pkg-config --libs sdl2` -lSDL2_image
 all: image neuralNetwork solver cutting rotate
 
 image: $(dependeciesImage)
-	gcc $(dependeciesImage) $(LDLIBS) -o image -lm
+	gcc -g $(dependeciesImage) $(LDLIBS) -o image -lm
 
 network: $(dependeciesNN)
 	gcc $(dependeciesNN) -o network -lm
@@ -33,19 +33,19 @@ threshold: threshold.o manipulatePixel.o
 edgeDetector: edgeDetector.o manipulatePixel.o
 
 image.o: manipulateImage/openImage.h manipulateImage/grayscale.h
-	gcc -c manipulateImage/image.c -lSDL2 -lSDL2main -lSDL2_image
+	gcc -c -g manipulateImage/image.c -lSDL2 -lSDL2main -lSDL2_image
 openImage.o:
-	gcc -c manipulateImage/openImage.c -lSDL2 -lSDL2main -lSDL2_image
+	gcc -c -g manipulateImage/openImage.c -lSDL2 -lSDL2main -lSDL2_image
 grayscale.o: manipulateImage/manipulatePixel.h
-	gcc -c manipulateImage/grayscale.c -lSDL2 -lSDL2main -lSDL2_image
+	gcc -c -g manipulateImage/grayscale.c -lSDL2 -lSDL2main -lSDL2_image
 manipulatePixel.o:
-	gcc -c manipulateImage/manipulatePixel.c -lSDL2 -lSDL2main -lSDL2_image
+	gcc -c -g manipulateImage/manipulatePixel.c -lSDL2 -lSDL2main -lSDL2_image
 blur.o :
-	gcc -c manipulateImage/blur.c -lSDL2 -lSDL2main -lSDL2_image
+	gcc -c -g manipulateImage/blur.c -lSDL2 -lSDL2main -lSDL2_image
 threshold.o:
-	gcc -c manipulateImage/threshold.c -lSDL2 -lSDL2main -lSDL2_image
+	gcc -c -g manipulateImage/threshold.c -lSDL2 -lSDL2main -lSDL2_image
 edgeDetector.o:
-	gcc -c manipulateImage/edgeDetector.c -lSDL2 -lSDL2main -lSDL2_image
+	gcc -c -g manipulateImage/edgeDetector.c -lSDL2 -lSDL2main -lSDL2_image
 
 #neural network
 
