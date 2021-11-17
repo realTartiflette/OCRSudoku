@@ -104,21 +104,27 @@ char* Threshold(char path[], int radius)
 		}
 	}
 
+
 	float nbPixel = (float)(tier1+tier2+tier3+tier4+tier5);
 	int ref;
 
-	if (((float)tier1/nbPixel) > 0.05)
+	if (((float)tier1/nbPixel) > 0.06)
 		ref = 80;
-	else if (((float)tier2/nbPixel) > 0.05)
-		ref = 180; //110
-	else if (((float)tier3/nbPixel) > 0.05)
+	else if (((float)tier2/nbPixel) > 0.06)
+		ref = 110; 
+	else if (((float)tier3/nbPixel) > 0.06)
 		ref = 135;
-	else if (((float)tier4/nbPixel) > 0.05)
+	else if (((float)tier4/nbPixel) > 0.06)
 		ref = 180;
 	else 
 		ref = 210;
 	
-	printf("%i", ref);
+	/*printf("tier1 = %i\n", tier1);
+	printf("tier2 = %i\n", tier2);
+	printf("tier3 = %i\n", tier3);
+	printf("tier4 = %i\n", tier4);
+	printf("tier5 = %i\n", tier5);
+	printf("%i\n", ref);*/
 	
 	for (int x = 0; x < img->w; x++)
 	{
