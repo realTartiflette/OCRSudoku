@@ -20,15 +20,15 @@ typedef struct neuralNetwork neuralNetwork;
 
 struct neuralNetwork
 {
-    int inputSize;
-    int nbOfHiddenLayers;
+    size_t inputSize;
+    size_t nbOfHiddenLayers;
     struct layer *hiddenLayers;
     struct layer *outputLayer;
 };
 
 void printNetwork(neuralNetwork *nn);
 
-neuralNetwork *createNeuralNetwork(int inputSize, int nbOfhidenLayers, int nbOfNeuronsByLayer[MAX_NEURON], int outputSize);
+neuralNetwork *createNeuralNetwork(size_t inputSize, size_t nbOfhidenLayers, size_t nbOfNeuronsByLayer[MAX_NEURON], size_t outputSize);
 
 void freeNetwork(neuralNetwork *nn);
 
@@ -36,5 +36,5 @@ void forwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *result);
 
 void backwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *expectedResults, matrix *results);
 
-void trainNetwork(neuralNetwork *nn, matrix *inputs, matrix *expectedResults, long nbOIter);
+void trainNetwork(neuralNetwork *nn, matrix *inputs, matrix *expectedResults, size_t nbOIter);
 #endif

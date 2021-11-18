@@ -9,8 +9,8 @@
 typedef struct matrix matrix;
 struct matrix
 {
-    int rows;
-    int cols;
+    size_t rows;
+    size_t cols;
     float mat[MAX_ROWS][MAX_COlS];
 };
 

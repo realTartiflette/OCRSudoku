@@ -6,24 +6,24 @@ float getFloatRandom()
     return 2*((float)rand()/(float)(RAND_MAX)) - 1;
 }
 
-void isInRange(int rows, int cols, char *funcName)
+void isInRange(size_t rows, size_t cols, char *funcName)
 {
     if(rows > MAX_ROWS || rows <= 0 || cols > MAX_COlS || cols <= 0)
     {
-        printf("%s : rows (%d) or cols(%d) are to hight or < 0 \n", funcName, rows, cols);
+        printf("%s : rows (%ld) or cols(%ld) are to hight or < 0 \n", funcName, rows, cols);
         exit(EXIT_FAILURE);
     }
 }
 
 void printMat(matrix *mat)
 {
-    int rows = mat->rows, cols = mat->cols;
+    size_t rows = mat->rows, cols = mat->cols;
     isInRange(rows, cols, "printMat");
 
-    for (int i = 0; i < rows; i++)
+    for (size_t i = 0; i < rows; i++)
     {
         printf("| ");
-        for (int j = 0; j < cols; j++)
+        for (size_t j = 0; j < cols; j++)
             printf("%0.2f ", mat->mat[i][j]);
         printf("|\n");
     }
@@ -32,11 +32,11 @@ void printMat(matrix *mat)
 
 void copyMat(matrix *mat, matrix *res)
 {
-    int rows = mat->rows, cols = mat->cols;
+    size_t rows = mat->rows, cols = mat->cols;
     isInRange(rows, cols, "copyMat");
-    for (int i = 0; i < rows; i++)
+    for (size_t i = 0; i < rows; i++)
     {
-        for (int j = 0; j < cols; j++)
+        for (size_t j = 0; j < cols; j++)
         {
             res->mat[i][j] = mat->mat[i][j];
         }
@@ -47,8 +47,8 @@ void copyMat(matrix *mat, matrix *res)
 
 void addMat(matrix *A, matrix *B, matrix *result)
 {
-    int rowsA = A->rows, colsA = A->cols;
-    int rowsB = B->rows, colsB = B->cols;
+    size_t rowsA = A->rows, colsA = A->cols;
+    size_t rowsB = B->rows, colsB = B->cols;
 
     isInRange(rowsA, colsA, "addMat");
     isInRange(rowsB, colsB, "addMat");
@@ -59,9 +59,9 @@ void addMat(matrix *A, matrix *B, matrix *result)
         exit(EXIT_FAILURE);
     }
 
-    for (int i = 0; i < rowsA; i++)
+    for (size_t i = 0; i < rowsA; i++)
     {
-        for (int j = 0; j < colsA; j++)
+        for (size_t j = 0; j < colsA; j++)
             result->mat[i][j] = A->mat[i][j] + B->mat[i][j];
     }
     
@@ -70,8 +70,8 @@ void addMat(matrix *A, matrix *B, matrix *result)
 
 void multMat(matrix *A, matrix *B, matrix *result)
 {
-    int rowsA = A->rows, colsA = A->cols;
-    int rowsB = B->rows, colsB = B->cols;
+    size_t rowsA = A->rows, colsA = A->cols;
+    size_t rowsB = B->rows, colsB = B->cols;
 
     isInRange(rowsA, colsA, "multMat");
     isInRange(rowsB, colsB, "multMat");
@@ -82,12 +82,12 @@ void multMat(matrix *A, matrix *B, matrix *result)
         exit(EXIT_FAILURE);
     }
 
-    for (int i = 0; i < rowsA; i++)
+    for (size_t i = 0; i < rowsA; i++)
     {
-        for (int j = 0; j < colsB; j++)
+        for (size_t j = 0; j < colsB; j++)
         {
             float sum = 0;
-            for (int k = 0; k < colsA; k++)
+            for (size_t k = 0; k < colsA; k++)
             {
                 sum += A->mat[i][k]*B->mat[k][j];
             }
@@ -100,11 +100,11 @@ void multMat(matrix *A, matrix *B, matrix *result)
 
 void transMat(matrix *A, matrix *result)
 {
-    int rows = A->rows, cols = A->cols;
+    size_t rows = A->rows, cols = A->cols;
     isInRange(rows, cols, "transMat");
-    for (int i = 0; i < rows; i++)
+    for (size_t i = 0; i < rows; i++)
     {
-        for (int j = 0; j < cols; j++)
+        for (size_t j = 0; j < cols; j++)
         {
             result->mat[j][i] = A->mat[i][j];
         }
@@ -117,12 +117,12 @@ void transMat(matrix *A, matrix *result)
 
 void applyFunc(matrix *A, float (*opp) (float), matrix *result)
 {
-    int rows = A->rows, cols = A->cols;
+    size_t rows = A->rows, cols = A->cols;
     isInRange(rows, cols, "applyFunc");
 
-    for (int i = 0; i < rows; i++)
+    for (size_t i = 0; i < rows; i++)
     {
-        for (int j = 0; j < cols; j++)
+        for (size_t j = 0; j < cols; j++)
         {
             result->mat[i][j] = (*opp)(A->mat[i][j]);
         }
@@ -132,13 +132,13 @@ void applyFunc(matrix *A, float (*opp) (float), matrix *result)
 
 void fillMatWithRandom(matrix *mat)
 {
-    int rows = mat->rows, cols = mat->cols;
+    size_t rows = mat->rows, cols = mat->cols;
 
     isInRange(rows, cols, "fillMatWithRandom");
 
-    for (int i = 0; i < rows; i++)
+    for (size_t i = 0; i < rows; i++)
     {
-        for (int j = 0; j < cols; j++)
+        for (size_t j = 0; j < cols; j++)
         {
             mat->mat[i][j] = getFloatRandom();
         }

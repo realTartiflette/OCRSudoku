@@ -21,9 +21,9 @@ float learningRate(float x)
 
 void getError (matrix *expected, matrix *output, matrix *error)
 {
-    for (int i = 0; i < expected->rows; i++)
+    for (size_t i = 0; i < expected->rows; i++)
     {
-        for (int j = 0; j < expected->cols; j++)
+        for (size_t j = 0; j < expected->cols; j++)
         {
             error->mat[i][j] = expected->mat[i][j] - output->mat[i][j];
         }
@@ -35,16 +35,16 @@ void getError (matrix *expected, matrix *output, matrix *error)
 void printNetwork(neuralNetwork *nn)
 {
     printf("    ");
-    for (int i = 0; i < nn->inputSize; i++)
+    for (size_t i = 0; i < nn->inputSize; i++)
     {
         printf("o ");
     }
     printf("\n\n");
 
-    for (int i = 0; i < nn->nbOfHiddenLayers; i++)
+    for (size_t i = 0; i < nn->nbOfHiddenLayers; i++)
     {
         printf("    ");
-        for (int j = 0; j < nn->hiddenLayers[i].weigths->cols; j++)
+        for (size_t j = 0; j < nn->hiddenLayers[i].weigths->cols; j++)
         {
             printf("o ");
         }
@@ -53,7 +53,7 @@ void printNetwork(neuralNetwork *nn)
     }
 
     printf("    ");
-    for (int i = 0; i < nn->outputLayer->weigths->cols; i++)
+    for (size_t i = 0; i < nn->outputLayer->weigths->cols; i++)
     {
         printf("o ");
     }
@@ -61,13 +61,13 @@ void printNetwork(neuralNetwork *nn)
     
 }
 
-neuralNetwork *createNeuralNetwork(int inputSize, int nbOfhidenLayers, int nbOfNeuronsByLayer[MAX_NEURON], int outputSize)
+neuralNetwork *createNeuralNetwork(size_t inputSize, size_t nbOfhidenLayers, size_t nbOfNeuronsByLayer[MAX_NEURON], size_t outputSize)
 {
     layer *layers = calloc(nbOfhidenLayers, sizeof(layer));
     srand((unsigned int) time(NULL));
 
-    int prevWeigthSize = inputSize;
-    for (int i = 0; i < nbOfhidenLayers; i++)
+    size_t prevWeigthSize = inputSize;
+    for (size_t i = 0; i < nbOfhidenLayers; i++)
     {
         layer l;
         l.weigths = malloc(sizeof(matrix));
@@ -78,7 +78,7 @@ neuralNetwork *createNeuralNetwork(int inputSize, int nbOfhidenLayers, int nbOfN
         l.weigths->cols = nbOfNeuronsByLayer[i];
         fillMatWithRandom(l.weigths);
 
-        for (int j = 0; j < nbOfNeuronsByLayer[i]; j++)
+        for (size_t j = 0; j < nbOfNeuronsByLayer[i]; j++)
         {
             l.bias[j] = 2*((float)rand()/(float)(RAND_MAX)) - 1;
         }
@@ -96,7 +96,7 @@ neuralNetwork *createNeuralNetwork(int inputSize, int nbOfhidenLayers, int nbOfN
     outputLayer->weigths->rows = prevWeigthSize, outputLayer->weigths->cols = outputSize;
     fillMatWithRandom(outputLayer->weigths);
     
-    for (int i = 0; i < outputSize; i++)
+    for (size_t i = 0; i < outputSize; i++)
     {
         outputLayer->bias[i] = 2*((float)rand()/(float)(RAND_MAX)) - 1;
     }
@@ -113,7 +113,7 @@ neuralNetwork *createNeuralNetwork(int inputSize, int nbOfhidenLayers, int nbOfN
 
 void freeNetwork(neuralNetwork *nn)
 {
-    for (int i = 0; i < nn->nbOfHiddenLayers; i++)
+    for (size_t i = 0; i < nn->nbOfHiddenLayers; i++)
     {
         free(nn->hiddenLayers[i].weigths);
         free(nn->hiddenLayers[i].bias);
@@ -132,13 +132,13 @@ void forwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *result)
     
     matrix *resLayer = inputs; 
     
-    for (int i = 0; i < nn->nbOfHiddenLayers; i++)
+    for (size_t i = 0; i < nn->nbOfHiddenLayers; i++)
     {
         layer *l = &(nn->hiddenLayers[i]);
         multMat(resLayer, l->weigths, buffer);
-        for (int k = 0; k < buffer->cols; k++)
+        for (size_t k = 0; k < buffer->cols; k++)
         {
-            for (int j = 0; j < buffer->rows; j++)
+            for (size_t j = 0; j < buffer->rows; j++)
             {
                 buffer->mat[j][k] += l->bias[k];
             }
@@ -154,9 +154,9 @@ void forwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *result)
 
     multMat(resLayer, output->weigths, buffer);
 
-    for (int j = 0; j < buffer->cols; j++)
+    for (size_t j = 0; j < buffer->cols; j++)
     {
-        for (int i = 0; i < buffer->rows; i++)
+        for (size_t i = 0; i < buffer->rows; i++)
         {
             buffer->mat[i][j] += output->bias[j];
         }
@@ -182,9 +182,9 @@ void backwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *expectedResu
     getError(expectedResults, results, error);
     applyFunc(results, sigmoidPrime, buffer);
     
-    for (int i = 0; i < results->rows; i++)
+    for (size_t i = 0; i < results->rows; i++)
     {
-        for (int j = 0; j < results->cols; j++)
+        for (size_t j = 0; j < results->cols; j++)
         {
             outputDelta->mat[i][j] = buffer->mat[i][j] * error->mat[i][j];
         }
@@ -199,10 +199,10 @@ void backwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *expectedResu
     matrix *hiddenDeltas = calloc(nn->nbOfHiddenLayers, sizeof(matrix)); //[MAX_LAYER];
     matrix *layerError = malloc(sizeof(matrix));
 
-    for (int i = nn->nbOfHiddenLayers - 1; i >= 0; i--)
+    for (size_t i = nn->nbOfHiddenLayers; i > 0; i--)
     {
         //compute error
-        layer *l = &(nn->hiddenLayers[i]);
+        layer *l = &(nn->hiddenLayers[i - 1]);
         
         transMat(prevWeights, buffer);
         multMat(prevDelta, buffer, layerError);
@@ -210,15 +210,15 @@ void backwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *expectedResu
         //compute delta
         applyFunc(l->resultLayer, sigmoidPrime, buffer);
 
-        for (int j = 0; j < layerError->rows; j++)
+        for (size_t j = 0; j < layerError->rows; j++)
         {
-            for (int k = 0; k < layerError->cols; k++)
+            for (size_t k = 0; k < layerError->cols; k++)
             {
-                hiddenDeltas[i].mat[j][k] = layerError->mat[j][k] * buffer->mat[j][k];
+                hiddenDeltas[i - 1].mat[j][k] = layerError->mat[j][k] * buffer->mat[j][k];
             }  
         }
-        hiddenDeltas[i].rows = layerError->rows, hiddenDeltas[i].cols = layerError->cols;
-        prevDelta = &hiddenDeltas[i];
+        hiddenDeltas[i - 1].rows = layerError->rows, hiddenDeltas[i - 1].cols = layerError->cols;
+        prevDelta = &hiddenDeltas[i - 1];
         prevWeights = l->weigths;
         
     }
@@ -231,7 +231,7 @@ void backwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *expectedResu
     matrix *prevResults = inputs;
     matrix *trans = malloc(sizeof(matrix));
     
-    for (int i = 0; i < nn->nbOfHiddenLayers; i++)
+    for (size_t i = 0; i < nn->nbOfHiddenLayers; i++)
     {
         //update weights
         layer *l = &(nn->hiddenLayers[i]);
@@ -241,10 +241,10 @@ void backwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *expectedResu
         addMat(l->weigths, buffer, l->weigths);
 
         //update bias
-        for (int k = 0; k < hiddenDeltas[i].cols; k++)
+        for (size_t k = 0; k < hiddenDeltas[i].cols; k++)
         {
             float sum = 0;
-            for (int j = 0; j < hiddenDeltas[i].rows; j++)
+            for (size_t j = 0; j < hiddenDeltas[i].rows; j++)
             {
                 sum += hiddenDeltas[i].mat[j][k];
             }
@@ -265,10 +265,10 @@ void backwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *expectedResu
     free(trans);
 }
 
-void trainNetwork(neuralNetwork *nn, matrix *inputs, matrix *expectedResults, long nbOIter)
+void trainNetwork(neuralNetwork *nn, matrix *inputs, matrix *expectedResults, size_t nbOIter)
 {
     matrix *res = malloc(sizeof(matrix));
-    for (long i = 0; i < nbOIter; i++)
+    for (size_t i = 0; i < nbOIter; i++)
     {
         forwardPropagation(nn, inputs, res);
         backwardPropagation(nn, inputs, expectedResults, res);

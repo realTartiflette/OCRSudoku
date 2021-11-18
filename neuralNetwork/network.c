@@ -3,7 +3,7 @@
 #include "neuralNetwork.h"
 int main()
 {
-	int n[MAX_LAYER] = {3};
+	size_t n[MAX_LAYER] = {3};
 	neuralNetwork *nn = createNeuralNetwork(2,1,n,2);
 	
 
