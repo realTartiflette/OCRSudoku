@@ -34,7 +34,7 @@ void freeNetwork(neuralNetwork *nn);
 
 void forwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *result);
 
-void backwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *expectedResults, matrix *results);
+void backwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *expectedResults, matrix *results, matrix *buffer);
 
 void trainNetwork(neuralNetwork *nn, matrix *inputs, matrix *expectedResults, size_t nbOIter);
 #endif

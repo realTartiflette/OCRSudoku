@@ -1,9 +1,6 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-#define MAX_ROWS 100
-#define MAX_COlS 100
-
 #include <stdlib.h>
 
 typedef struct matrix matrix;
@@ -11,8 +8,11 @@ struct matrix
 {
     size_t rows;
     size_t cols;
-    float mat[MAX_ROWS][MAX_COlS];
+    float *mat;
 };
+
+matrix *matAlloc(size_t rows, size_t cols);
+void freeMat(matrix *M);
 
 //prints a matrix on the standard output
 void printMat(matrix *mat);
