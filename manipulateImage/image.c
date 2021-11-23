@@ -17,8 +17,8 @@ int main(int argc, char **argv)
 	{
 		
 		char* name = Grayscale(argv[1]);
-		//name = GaussianBlur(name);
 		name = Threshold(name, 1);
+		name = GaussianBlur(name);
 		name = sobel(name);
 		name = detectLine(name);
 		//name = houghTransform(name);
