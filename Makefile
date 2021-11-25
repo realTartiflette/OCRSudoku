@@ -1,7 +1,7 @@
 CC = gcc
 
 dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o edgeDetector.o
-dependeciesNN = network.o matrix.o neuralNetwork.o
+dependeciesNN = network.o matrix.o neuralNetwork.o initNetwork.o manipulatePixel.o
 dependeciesCut = cutting.o cut.o manipulatePixel.o
 
 CPPFLAGS= `pkg-config --cflags sdl2` -MMD
@@ -16,7 +16,7 @@ image: $(dependeciesImage)
 	gcc $(dependeciesImage) $(LDLIBS) -o image -lm
 
 network: $(dependeciesNN)
-	gcc $(dependeciesNN) -o network -lm -g
+	gcc $(dependeciesNN) $(LDLIBS) -o network -lm -g
 
 solver: solver.o
 	gcc solver.o -o solver
@@ -49,12 +49,14 @@ edgeDetector.o:
 
 #neural network
 
-network.o: neuralNetwork/neuralNetwork.h
+network.o: neuralNetwork/initNetwork.h
 	gcc -c neuralNetwork/network.c -g
 matrix.o: neuralNetwork/matrix.h
 	gcc -c neuralNetwork/matrix.c -g
 neuralNetwork.o: neuralNetwork/neuralNetwork.h
 	gcc -c neuralNetwork/neuralNetwork.c -g
+initNetwork.o: neuralNetwork/initNetwork.h manipulateImage/manipulatePixel.h
+	gcc -c neuralNetwork/initNetwork.c -g -lSDL2 -lSDL2main -lSDL2_image
 
 #solver
 solver.o: solverSudoku/solver.c

@@ -1,11 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "neuralNetwork.h"
+#include "initNetwork.h"
 int main()
 {
 	
 	size_t n[MAX_LAYER] = {3};
-	neuralNetwork *nn = createNeuralNetwork(2,1,n,2); //createNeuralNetwork(10000,1,n,10);
+	matrix *inputs;
+	matrix *expectedResults;
+	char path[100] = "training_set/";
+	neuralNetwork *nn = initNetwork(path, 1, n, &inputs, &expectedResults);
+	
+	printMat(expectedResults);
+	
+	/*neuralNetwork *nn = createNeuralNetwork(2,1,n,2); //createNeuralNetwork(10000,1,n,10);
 	
 
 	matrix *inputs = matAlloc(4,2);
@@ -18,7 +25,7 @@ int main()
 	inputs->mat[6] = 1;
 	inputs->mat[7] = 0;
 
-	/*{
+	{
 		4,//rows
 		2,//cols
 		{
@@ -27,7 +34,7 @@ int main()
 			{0,1},
 			{1,0}
 		}
-	};*/
+	};
 
 	matrix *expectedResuls = matAlloc(4,2);
 	
@@ -48,7 +55,7 @@ int main()
 			{1,0},
 			{1,0},
 		}
-	};*/
+	};
 	
 
 	trainNetwork(nn, inputs, expectedResuls, 200000);
@@ -70,5 +77,5 @@ int main()
 	freeMat(res2);
 	freeNetwork(nn);
 	freeNetwork(nn2);
-	return 0;
+	return 0;*/
 }
