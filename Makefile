@@ -4,22 +4,22 @@ dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o thre
 dependeciesNN = network.o matrix.o neuralNetwork.o
 dependeciesCut = cutting.o cut.o manipulatePixel.o
 
-CFLAGSINTER = `pkg-config --cflags gtk+-3.0`
-LIBSINTER = `pkg-config --libs gtk+-3.0`
+CFLAGSINTER = `pkg-config --cflags gtk+-3.0` -Wall -O3
+LIBSINTER = `pkg-config --libs gtk+-3.0` -rdynamic
 
-CPPFLAGS= `pkg-config --cflags sdl2` -MMD
+#CPPFLAGS= `pkg-config --cflags sdl2` -MMD
 CGLAGS= -Wall -Wextra -Werror -std=c99 -03
 LDFLAGS=
 LDLIBS = `pkg-config --libs sdl2` -lSDL2_image
 
 
-all: image neuralNetwork solver cutting rotate interface
+all: image network solver cutting interface
 
 image: $(dependeciesImage)
 	gcc $(dependeciesImage) $(LDLIBS) -o image -lm
 
-interface: Interface/start.c
-	gcc $(CFLAGSINTER) -o interface Interface/start.c $(LIBSINTER)
+interface: window.o
+	gcc window.o $(CFLAGSINTER) $(LIBSINTER) -o window
 
 network: $(dependeciesNN)
 	gcc $(dependeciesNN) -o network -lm
@@ -75,10 +75,11 @@ cut.o: Cutting/manipulatePixel.h
 
 #interface
 
-
+window.o: Interface/window.h
+	gcc -c Interface/window.c $(CFLAGSINTER) $(LIBSINTER)
 
 clean:
-	rm *.o results/* image network solver cutting interface
+	rm *.o results/* image network solver cutting window
 
 
 
