@@ -26,7 +26,7 @@ network: $(dependeciesNN)
 	gcc $(dependeciesNN) -o network -lm
 
 solver: solver.o solverSudoku.o
-	gcc solver.o solverSudoku.o -o solver
+	gcc -g solver.o solverSudoku.o -o solver
 
 cutting: ${dependeciesCut}
 	gcc $(dependeciesCut) $(LDLIBS) -o cutting -lm
@@ -65,9 +65,9 @@ neuralNetwork.o: neuralNetwork/neuralNetwork.h
 
 #solver
 solver.o: solverSudoku/solver.c solverSudoku/solverSudoku.h
-	gcc -c solverSudoku/solver.c
+	gcc -g -c solverSudoku/solver.c
 solverSudoku.o: solverSudoku/solverSudoku.h
-	gcc -c solverSudoku/solverSudoku.c
+	gcc -g -c solverSudoku/solverSudoku.c
 
 
 #cutting

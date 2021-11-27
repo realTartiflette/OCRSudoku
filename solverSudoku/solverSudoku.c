@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "solverSudoku.h"
 
 
@@ -87,13 +88,70 @@ int solve_sudoku()
     return 0;
 }
 
+int check_line_sudoku(int line)
+{
+    int res=1;
+    int check[9]={0,0,0,0,0,0,0,0,0};
+    for(int i=0;i<9;i++)
+    {
+        check[(matrix[line][i])-1]+=1;
+    }
+    int j=0;
+    while(res==1 && j<9)
+    {
+        if (check[j]>=2)
+        {
+            res=0;
+        }
+        j++;
+    }
+    return res;
 
+}
+
+int check_column_sudoku(int col)
+{
+    int res=1;
+    int check[9]={0,0,0,0,0,0,0,0,0};
+    for(int i=0;i<9;i++)
+    {
+        check[(matrix[i][col])-1]+=1;
+    }
+    int j=0;
+    while(res==1 && j<9)
+    {
+        if (check[j]>1)
+            res=0;
+        j++;
+    }
+    return res;
+
+}
+
+int check_sudoku()
+{
+    int res=1;
+    int i=0;
+    while(res==1 && i<9)
+    {
+        res=check_line_sudoku(i);
+        i++;
+    }
+    i=0;
+    while(res==1 && i<9)
+    {
+        res=check_column_sudoku(i);
+        i++;
+    }
+    return res;
+}
 
 
 int solve(char *sudoku)
 {
     FILE* fichier = NULL;
     fichier = fopen(sudoku, "r");
+    int res=1;
 
     char caractereActuel = ' ';
 
@@ -120,50 +178,58 @@ int solve(char *sudoku)
                 matrix[i][j]=(int)caractereActuel-48;
                 j=j+1;
             }
+            else if (caractereActuel!=0 && caractereActuel!=' ' && caractereActuel!='\n')
+            {
+                res=0;
+            }
 
 
 
-        } while (caractereActuel != EOF && i!=9); 
+        } while (caractereActuel != EOF && i!=9 && res==1); 
 
         fclose(fichier);
     
 
 
 
-        if (solve_sudoku(matrix))
+        if (solve_sudoku())
         {
             FILE* newfichier= fopen(strcat(sudoku,".result"),"w");
-            for (int i = 0; i < 9; ++i)
+            if (check_sudoku()==1 && res==1)
             {
-                if (i%3==0 && i!=0)
+                for (int i = 0; i < 9; ++i)
                 {
+                    if (i%3==0 && i!=0)
+                    {
+                        fputc('\n',newfichier);
+                    }
+                    for (int j=0;j<9;j++)
+                    {
+                        if (j%3==0)
+                        {
+                            fputc(' ',newfichier);
+                        }
+                        int n=matrix[i][j];
+                        if (n==0)
+                        {
+                            fputc('.',newfichier);
+                        }
+                        else
+                        {
+                        caractereActuel=matrix[i][j]+48;
+                            fputc(((char)caractereActuel),newfichier);
+                        }
+                    }
                     fputc('\n',newfichier);
                 }
-                for (int j=0;j<9;j++)
-                {
-                    if (j%3==0)
-                    {
-                        fputc(' ',newfichier);
-                    }
-                    int n=matrix[i][j];
-                    if (n==0)
-                    {
-                        fputc('.',newfichier);
-                    }
-                    else
-                    {
-                        caractereActuel=matrix[i][j]+48;
-                        fputc(((char)caractereActuel),newfichier);
-                    }
-                }
-                fputc('\n',newfichier);
+            }
+            else
+            {
+                fputs("grille invalide",newfichier);
+                res=0;
             }
         }
-
-
-        else
-            printf("No solution\n");
-        return 0;
+        return res;
     }
 }
 
