@@ -106,163 +106,167 @@ void on_chooser_file_activated(GtkFileChooserButton *b)
 void on_chooser_file_set(GtkWidget *b)
 {
 	gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(b));
-
-	char* name = Grayscale(filename);
-	name = Threshold(name, 1);
-	name = detectLine(name);
-
-
-	char cmd[2048];
-	FILE *f1;
-	char cmd1[2048];
-	FILE *f2;
-	int j, h, v;
-	int hor = 0;
-	int ver = 200;
-	int j1, h1, v1;
-	int hor1 = 400;
-	int ver1 = 200;
-	gchar *filename1 = "results/linesDetectedIMG.jpg";
-	if (image1 && image3)
+	int len = strlen(filename);
+	if (filename[len-1] == 'g' && filename[len-2] == 'p' && filename[len-3] == 'j')
 	{
-		gtk_container_remove(GTK_CONTAINER(stkfxd1), image1);
-		gtk_container_remove(GTK_CONTAINER(stkfxd1), image3);
-	}
-	//gtk_widget_hide(image2);
-	
-	sprintf(cmd, "identify -format %%wx%%h \"%s\"\n", filename);
-	f1 = popen(cmd, "r");
-	sprintf(cmd1, "identify -format %%wx%%h \"%s\"\n", filename1);
-	f2 = popen(cmd1, "r");
+		char* name = Grayscale(filename);
+		name = Threshold(name, 1);
+		name = detectLine(name);
 
-	strcpy(cmd,"");
-	fgets(cmd, 512, f1);
-	strcpy(cmd1,"");
-	fgets(cmd1, 512, f2);
-	fclose(f1);
-	fclose(f2);
 
-	h = v = 1;
-	h1 = v1 = 1;
-
-	if (strlen(cmd))
-	{
-		for (j = 0; j < strlen(cmd)-1; j++)
+		char cmd[2048];
+		FILE *f1;
+		char cmd1[2048];
+		FILE *f2;
+		int j, h, v;
+		int hor = 0;
+		int ver = 200;
+		int j1, h1, v1;
+		int hor1 = 400;
+		int ver1 = 200;
+		gchar *filename1 = "results/linesDetectedIMG.jpg";
+		if (image1 && image3)
 		{
+			gtk_container_remove(GTK_CONTAINER(stkfxd1), image1);
+			gtk_container_remove(GTK_CONTAINER(stkfxd1), image3);
+		}
+		//gtk_widget_hide(image2);
+		
+		sprintf(cmd, "identify -format %%wx%%h \"%s\"\n", filename);
+		f1 = popen(cmd, "r");
+		sprintf(cmd1, "identify -format %%wx%%h \"%s\"\n", filename1);
+		f2 = popen(cmd1, "r");
+
+		strcpy(cmd,"");
+		fgets(cmd, 512, f1);
+		strcpy(cmd1,"");
+		fgets(cmd1, 512, f2);
+		fclose(f1);
+		fclose(f2);
+
+		h = v = 1;
+		h1 = v1 = 1;
+
+		if (strlen(cmd))
+		{
+			for (j = 0; j < strlen(cmd)-1; j++)
+			{
+				if (cmd[j] == 'x')
+					break;
+			}
 			if (cmd[j] == 'x')
-				break;
+			{
+				cmd[j] = 0;
+				sscanf(cmd, "%d", &h);
+				sscanf(&cmd[j+1],"%d", &v);
+			}
 		}
-		if (cmd[j] == 'x')
-		{
-			cmd[j] = 0;
-			sscanf(cmd, "%d", &h);
-			sscanf(&cmd[j+1],"%d", &v);
-		}
-	}
 
-	if (strlen(cmd1))
-	{
-		for (j1 = 0; j1 < strlen(cmd1)-1; j1++)
+		if (strlen(cmd1))
 		{
+			for (j1 = 0; j1 < strlen(cmd1)-1; j1++)
+			{
+				if (cmd1[j1] == 'x')
+					break;
+			}
 			if (cmd1[j1] == 'x')
-				break;
+			{
+				cmd1[j1] = 0;
+				sscanf(cmd1, "%d", &h1);
+				sscanf(&cmd1[j1+1],"%d", &v1);
+			}
 		}
-		if (cmd1[j1] == 'x')
+
+		if (h < 100 || v < 100)
 		{
-			cmd1[j1] = 0;
-			sscanf(cmd1, "%d", &h1);
-			sscanf(&cmd1[j1+1],"%d", &v1);
+			printf("**** questionable image: %s\n", filename);
+			return;
 		}
-	}
-
-	if (h < 100 || v < 100)
-	{
-		printf("**** questionable image: %s\n", filename);
-		return;
-	}
-	if (h1 < 100 || v1 < 100)
-	{
-		printf("**** questionable image: %s\n", filename1);
-		return;
-	}
-
-
-	int width = 300;
-	int height = 300;
-
-	sprintf(cmd, "convert \"%s\" -resize %dx%d tmp.jpg", filename, width, height);
-	system(cmd);
-	strcpy(filename, "tmp.jpg");
-
-	sprintf(cmd, "identify -format %%wx%%h \"%s\"\n", filename);
-	f1 = popen(cmd, "r");
-
-	strcpy(cmd,"");
-	fgets(cmd, 512, f1);
-	fclose(f1);
-
-	h = v = 1;
-	if (strlen(cmd))
-	{
-		for (j = 0; j < strlen(cmd)-1; j++)
+		if (h1 < 100 || v1 < 100)
 		{
+			printf("**** questionable image: %s\n", filename1);
+			return;
+		}
+
+
+		int width = 300;
+		int height = 300;
+
+		sprintf(cmd, "convert \"%s\" -resize %dx%d tmp.jpg", filename, width, height);
+		system(cmd);
+		strcpy(filename, "tmp.jpg");
+
+		sprintf(cmd, "identify -format %%wx%%h \"%s\"\n", filename);
+		f1 = popen(cmd, "r");
+
+		strcpy(cmd,"");
+		fgets(cmd, 512, f1);
+		fclose(f1);
+
+		h = v = 1;
+		if (strlen(cmd))
+		{
+			for (j = 0; j < strlen(cmd)-1; j++)
+			{
+				if (cmd[j] == 'x')
+					break;
+			}
 			if (cmd[j] == 'x')
-				break;
+			{
+				cmd[j] = 0;
+				sscanf(cmd, "%d", &h);
+				sscanf(&cmd[j+1],"%d", &v);
+			}
 		}
-		if (cmd[j] == 'x')
+
+		image1 = gtk_image_new_from_file(filename);
+		gtk_container_add(GTK_CONTAINER(stkfxd1), image1);
+		gtk_widget_show(image1);
+
+		gtk_fixed_move(GTK_FIXED(stkfxd1), image1, hor, ver);
+
+		sprintf(cmd, "convert \"%s\" -resize %dx%d tmp.jpg", filename1, width, height);
+		system(cmd);
+		strcpy(filename, "tmp.jpg");
+
+		sprintf(cmd1, "identify -format %%wx%%h \"%s\"\n", filename);
+		f2 = popen(cmd, "r");
+
+		strcpy(cmd,"");
+		fgets(cmd, 512, f2);
+		fclose(f2);
+
+		
+		h1 = v1 = 1;
+
+		
+		if (strlen(cmd1))
 		{
-			cmd[j] = 0;
-			sscanf(cmd, "%d", &h);
-			sscanf(&cmd[j+1],"%d", &v);
-		}
-	}
-
-	image1 = gtk_image_new_from_file(filename);
-	gtk_container_add(GTK_CONTAINER(stkfxd1), image1);
-	gtk_widget_show(image1);
-
-	gtk_fixed_move(GTK_FIXED(stkfxd1), image1, hor, ver);
-
-	sprintf(cmd, "convert \"%s\" -resize %dx%d tmp.jpg", filename1, width, height);
-	system(cmd);
-	strcpy(filename, "tmp.jpg");
-
-	sprintf(cmd1, "identify -format %%wx%%h \"%s\"\n", filename);
-	f2 = popen(cmd, "r");
-
-	strcpy(cmd,"");
-	fgets(cmd, 512, f2);
-	fclose(f2);
-
-	
-	h1 = v1 = 1;
-
-	
-	if (strlen(cmd1))
-	{
-		for (j1 = 0; j1 < strlen(cmd1)-1; j1++)
-		{
+			for (j1 = 0; j1 < strlen(cmd1)-1; j1++)
+			{
+				if (cmd1[j1] == 'x')
+					break;
+			}
 			if (cmd1[j1] == 'x')
-				break;
+			{
+				cmd1[j1] = 0;
+				sscanf(cmd1, "%d", &h1);
+				sscanf(&cmd1[j1+1],"%d", &v1);
+			}
 		}
-		if (cmd1[j1] == 'x')
-		{
-			cmd1[j1] = 0;
-			sscanf(cmd1, "%d", &h1);
-			sscanf(&cmd1[j1+1],"%d", &v1);
-		}
+
+		
+
+		image3 = gtk_image_new_from_file(filename);
+		gtk_container_add(GTK_CONTAINER(stkfxd1), image3);
+		gtk_widget_show(image3);
+
+		
+		gtk_fixed_move(GTK_FIXED(stkfxd1), image3, hor1, ver1);
+		system("rm tmp.jpg");
+		//system("rm tmp1.jpg");
 	}
 
-	
-
-	image3 = gtk_image_new_from_file(filename);
-	gtk_container_add(GTK_CONTAINER(stkfxd1), image3);
-	gtk_widget_show(image3);
-
-	
-	gtk_fixed_move(GTK_FIXED(stkfxd1), image3, hor1, ver1);
-	system("rm tmp.jpg");
-	//system("rm tmp1.jpg");
 }
 
 void on_saveText_clicked(GtkButton *b)
