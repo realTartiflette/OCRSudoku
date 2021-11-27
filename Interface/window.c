@@ -5,6 +5,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "window.h"
+#include "../solverSudoku/solverSudoku.h"
+#include "../manipulateImage/openImage.h"
+#include "../manipulateImage/grayscale.h"
+#include "../manipulateImage/blur.h"
+#include "../manipulateImage/threshold.h"
+#include "../manipulateImage/edgeDetector.h"
 
 // Variables
 GtkWidget *window;
@@ -13,12 +19,15 @@ GtkWidget *stkfxd1;
 GtkBuilder *builder;
 GtkWidget *image1;
 GtkWidget *image2;
+GtkWidget *image3;
+GtkWidget *image4;
 GtkWidget *chooser;
 GtkWidget *ViewPort;
 GtkWidget *TextView;
 GtkWidget *saveText;
 GtkWidget *editText;
 GtkTextBuffer *TextBuffer;
+GtkWidget *solveButton;
 char tmp[1024];
 
 
@@ -39,12 +48,15 @@ int main (int argc, char *argv[])
     gtk_builder_connect_signals(builder, NULL);
     fixed1 = GTK_WIDGET(gtk_builder_get_object(builder, "fixed1"));
     image2 = GTK_WIDGET(gtk_builder_get_object(builder, "image2"));
+	image4 = GTK_WIDGET(gtk_builder_get_object(builder, "image4"));
     chooser = GTK_WIDGET(gtk_builder_get_object(builder, "chooser"));
 	stkfxd1 = GTK_WIDGET(gtk_builder_get_object(builder, "stkfxd1"));		
 	ViewPort = GTK_WIDGET(gtk_builder_get_object(builder, "ViewPort"));
 	TextView = GTK_WIDGET(gtk_builder_get_object(builder, "TextView"));
 	saveText = GTK_WIDGET(gtk_builder_get_object(builder, "saveText"));
 	editText = GTK_WIDGET(gtk_builder_get_object(builder, "editText"));
+	solveButton = GTK_WIDGET(gtk_builder_get_object(builder, "solveButton"));
+
 
 
 	TextBuffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(TextView));
@@ -58,6 +70,7 @@ int main (int argc, char *argv[])
     // Runs the main loop.
     gtk_widget_show(window);
     image1 = NULL;
+	image3 = NULL;
     gtk_main();
 
     // Exits.
@@ -78,8 +91,14 @@ int main (int argc, char *argv[])
 	gtk_container_add(GTK_CONTAINER(fixed1), image1);
 	gtk_fixed_move(GTK_FIXED(fixed1), image1, hor, ver);
 }*/
+void on_solveButton_clicked(GtkWidget *b)
+{
+	printf("pomme\n");
+	solve("../solverSudoku/sudoku");
+	printf("work\n");
+}
 
-on_chooser_file_activated(GtkFileChooserButton *b)
+void on_chooser_file_activated(GtkFileChooserButton *b)
 {
 	printf("ok");
 }
@@ -87,23 +106,44 @@ on_chooser_file_activated(GtkFileChooserButton *b)
 void on_chooser_file_set(GtkWidget *b)
 {
 	gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(b));
+
+	char* name = Grayscale(filename);
+	name = Threshold(name, 1);
+	name = detectLine(name);
+
+
 	char cmd[2048];
 	FILE *f1;
+	char cmd1[2048];
+	FILE *f2;
 	int j, h, v;
 	int hor = 0;
 	int ver = 200;
-	if (image1)
+	int j1, h1, v1;
+	int hor1 = 400;
+	int ver1 = 200;
+	gchar *filename1 = "results/linesDetectedIMG.jpg";
+	if (image1 && image3)
+	{
 		gtk_container_remove(GTK_CONTAINER(stkfxd1), image1);
+		gtk_container_remove(GTK_CONTAINER(stkfxd1), image3);
+	}
 	//gtk_widget_hide(image2);
 	
 	sprintf(cmd, "identify -format %%wx%%h \"%s\"\n", filename);
 	f1 = popen(cmd, "r");
+	sprintf(cmd1, "identify -format %%wx%%h \"%s\"\n", filename1);
+	f2 = popen(cmd1, "r");
 
 	strcpy(cmd,"");
 	fgets(cmd, 512, f1);
+	strcpy(cmd1,"");
+	fgets(cmd1, 512, f2);
 	fclose(f1);
+	fclose(f2);
 
 	h = v = 1;
+	h1 = v1 = 1;
 
 	if (strlen(cmd))
 	{
@@ -120,9 +160,29 @@ void on_chooser_file_set(GtkWidget *b)
 		}
 	}
 
+	if (strlen(cmd1))
+	{
+		for (j1 = 0; j1 < strlen(cmd1)-1; j1++)
+		{
+			if (cmd1[j1] == 'x')
+				break;
+		}
+		if (cmd1[j1] == 'x')
+		{
+			cmd1[j1] = 0;
+			sscanf(cmd1, "%d", &h1);
+			sscanf(&cmd1[j1+1],"%d", &v1);
+		}
+	}
+
 	if (h < 100 || v < 100)
 	{
 		printf("**** questionable image: %s\n", filename);
+		return;
+	}
+	if (h1 < 100 || v1 < 100)
+	{
+		printf("**** questionable image: %s\n", filename1);
 		return;
 	}
 
@@ -142,7 +202,6 @@ void on_chooser_file_set(GtkWidget *b)
 	fclose(f1);
 
 	h = v = 1;
-
 	if (strlen(cmd))
 	{
 		for (j = 0; j < strlen(cmd)-1; j++)
@@ -163,7 +222,47 @@ void on_chooser_file_set(GtkWidget *b)
 	gtk_widget_show(image1);
 
 	gtk_fixed_move(GTK_FIXED(stkfxd1), image1, hor, ver);
+
+	sprintf(cmd, "convert \"%s\" -resize %dx%d tmp.jpg", filename1, width, height);
+	system(cmd);
+	strcpy(filename, "tmp.jpg");
+
+	sprintf(cmd1, "identify -format %%wx%%h \"%s\"\n", filename);
+	f2 = popen(cmd, "r");
+
+	strcpy(cmd,"");
+	fgets(cmd, 512, f2);
+	fclose(f2);
+
+	
+	h1 = v1 = 1;
+
+	
+	if (strlen(cmd1))
+	{
+		for (j1 = 0; j1 < strlen(cmd1)-1; j1++)
+		{
+			if (cmd1[j1] == 'x')
+				break;
+		}
+		if (cmd1[j1] == 'x')
+		{
+			cmd1[j1] = 0;
+			sscanf(cmd1, "%d", &h1);
+			sscanf(&cmd1[j1+1],"%d", &v1);
+		}
+	}
+
+	
+
+	image3 = gtk_image_new_from_file(filename);
+	gtk_container_add(GTK_CONTAINER(stkfxd1), image3);
+	gtk_widget_show(image3);
+
+	
+	gtk_fixed_move(GTK_FIXED(stkfxd1), image3, hor1, ver1);
 	system("rm tmp.jpg");
+	//system("rm tmp1.jpg");
 }
 
 void on_saveText_clicked(GtkButton *b)
