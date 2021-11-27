@@ -28,6 +28,8 @@ GtkWidget *saveText;
 GtkWidget *editText;
 GtkTextBuffer *TextBuffer;
 GtkWidget *solveButton;
+GtkWidget *saveLabel;
+GtkWidget *saveFile;
 char tmp[1024];
 
 
@@ -56,6 +58,8 @@ int main (int argc, char *argv[])
 	saveText = GTK_WIDGET(gtk_builder_get_object(builder, "saveText"));
 	editText = GTK_WIDGET(gtk_builder_get_object(builder, "editText"));
 	solveButton = GTK_WIDGET(gtk_builder_get_object(builder, "solveButton"));
+	saveLabel = GTK_WIDGET(gtk_builder_get_object(builder, "saveLabel"));
+	saveFile = GTK_WIDGET(gtk_builder_get_object(builder, "saveFile"));
 
 
 
@@ -66,6 +70,7 @@ int main (int argc, char *argv[])
 
 	gtk_text_buffer_set_text(TextBuffer, (const gchar *) tmp, (gint) -1);
 	gtk_widget_hide(saveText);
+	gtk_widget_hide(saveLabel);
 
     // Runs the main loop.
     gtk_widget_show(window);
@@ -77,6 +82,12 @@ int main (int argc, char *argv[])
     return 0;
 }
 
+void on_saveFile_clicked(GtkButton *b)
+{
+	system("cp solverSudoku/solver.c ~/Downloads/sudoku.c");
+	gtk_widget_show(saveLabel);
+	
+}
 
 /*void on_button3_clicked(GtkButton *b)
 {
@@ -93,6 +104,7 @@ int main (int argc, char *argv[])
 }*/
 void on_solveButton_clicked(GtkWidget *b)
 {
+	gtk_widget_hide(saveLabel);
 	printf("pomme\n");
 	solve("../solverSudoku/sudoku");
 	printf("work\n");
@@ -105,6 +117,7 @@ void on_chooser_file_activated(GtkFileChooserButton *b)
 
 void on_chooser_file_set(GtkWidget *b)
 {
+	gtk_widget_hide(saveLabel);
 	gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(b));
 	int len = strlen(filename);
 	if (filename[len-1] == 'g' && filename[len-2] == 'p' && filename[len-3] == 'j')
@@ -287,6 +300,7 @@ void on_saveText_clicked(GtkButton *b)
 
 void on_editText_clicked(GtkButton *b)
 {
+	gtk_widget_hide(saveLabel);
 	printf("*** on edit text\n");
 	gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(TextView), TRUE);
 	gtk_text_view_set_editable(GTK_TEXT_VIEW(TextView), TRUE);
