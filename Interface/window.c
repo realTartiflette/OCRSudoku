@@ -88,33 +88,23 @@ int main (int argc, char *argv[])
 
 void on_saveFile_clicked(GtkButton *b)
 {
-	FILE *saveFile = fopen("~/Downloads/sudokuResult.txt", "w+");
-	if(saveFile!=NULL)
+	FILE *saveFile = fopen("sudokuResult.txt", "w");
+	if(saveFile != NULL)
 	{
 		GtkTextIter begin, end;
 		gchar *text;
 		gtk_text_buffer_get_iter_at_offset(GTK_TEXT_BUFFER(TextBuffer2), &begin, (gint) 0);
 		gtk_text_buffer_get_iter_at_offset(GTK_TEXT_BUFFER(TextBuffer2), &end, (gint) -1);
 		text = gtk_text_buffer_get_text(GTK_TEXT_BUFFER(TextBuffer2), &begin, &end, TRUE);
-	    fputs(text, saveFile);
+		//printf("%s\n", text);
+	    fprintf(saveFile, text);
+		fclose(saveFile);
+		system("mv sudokuResult.txt ~/Downloads/sudokuResult.txt");
 	}
-    fclose(saveFile);
-	//gtk_widget_show(saveLabel);
+    
+	gtk_widget_show(saveLabel);
 }
 
-/*void on_button3_clicked(GtkButton *b)
-{
-	char filename[] = "test4.jpg";
-	int hor = 10;
-	int ver = 100;
-	if (image1)
-		gtk_container_remove(GTK_CONTAINER(fixed1), image1);
-	gtk_widget_hide(image2);
-	image1 = gtk_image_new_from_file(filename);
-	gtk_widget_show(image1);
-	gtk_container_add(GTK_CONTAINER(fixed1), image1);
-	gtk_fixed_move(GTK_FIXED(fixed1), image1, hor, ver);
-}*/
 void on_solveButton_clicked(GtkWidget *b)
 {
 	gtk_widget_hide(saveLabel);

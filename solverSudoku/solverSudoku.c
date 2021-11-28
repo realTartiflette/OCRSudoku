@@ -278,7 +278,7 @@ char *solve(char *input)
         else if(res==0)//bad character in string
         {
             output = (char *)malloc(75);// /!\ /!\ /!\ Modify this value if you modify the text
-            putText("invalid grid (bad character format in the string or doesn't respect sudoku rules)", output);
+            putText("invalid grid (bad character\n format in the string or doesn't\n respect sudoku rules)", output);
         }
     }
     return output;
