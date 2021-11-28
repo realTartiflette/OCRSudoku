@@ -24,9 +24,11 @@ GtkWidget *image4;
 GtkWidget *chooser;
 GtkWidget *ViewPort;
 GtkWidget *TextView;
+GtkWidget *TextView2;
 GtkWidget *saveText;
 GtkWidget *editText;
 GtkTextBuffer *TextBuffer;
+GtkTextBuffer *TextBuffer2;
 GtkWidget *solveButton;
 GtkWidget *saveLabel;
 GtkWidget *saveFile;
@@ -55,6 +57,7 @@ int main (int argc, char *argv[])
 	stkfxd1 = GTK_WIDGET(gtk_builder_get_object(builder, "stkfxd1"));		
 	ViewPort = GTK_WIDGET(gtk_builder_get_object(builder, "ViewPort"));
 	TextView = GTK_WIDGET(gtk_builder_get_object(builder, "TextView"));
+	TextView2 = GTK_WIDGET(gtk_builder_get_object(builder, "TextView2"));
 	saveText = GTK_WIDGET(gtk_builder_get_object(builder, "saveText"));
 	editText = GTK_WIDGET(gtk_builder_get_object(builder, "editText"));
 	solveButton = GTK_WIDGET(gtk_builder_get_object(builder, "solveButton"));
@@ -65,6 +68,7 @@ int main (int argc, char *argv[])
 
 	TextBuffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(TextView));
 	g_signal_connect(TextBuffer, "changed", G_CALLBACK(on_changed_text), NULL);
+	TextBuffer2 = gtk_text_view_get_buffer(GTK_TEXT_VIEW(TextView2));
     
 	strcpy(tmp, "... ... ...\n... ... ...\n... ... ...\n\n... ... ...\n... ... ...\n... ... ...\n\n... ... ...\n... ... ...\n... ... ...");
 
@@ -84,9 +88,18 @@ int main (int argc, char *argv[])
 
 void on_saveFile_clicked(GtkButton *b)
 {
-	system("cp solverSudoku/solver.c ~/Downloads/sudoku.c");
-	gtk_widget_show(saveLabel);
-	
+	FILE *saveFile = fopen("~/Downloads/sudokuResult.txt", "w+");
+	if(saveFile!=NULL)
+	{
+		GtkTextIter begin, end;
+		gchar *text;
+		gtk_text_buffer_get_iter_at_offset(GTK_TEXT_BUFFER(TextBuffer2), &begin, (gint) 0);
+		gtk_text_buffer_get_iter_at_offset(GTK_TEXT_BUFFER(TextBuffer2), &end, (gint) -1);
+		text = gtk_text_buffer_get_text(GTK_TEXT_BUFFER(TextBuffer2), &begin, &end, TRUE);
+	    fputs(text, saveFile);
+	}
+    fclose(saveFile);
+	//gtk_widget_show(saveLabel);
 }
 
 /*void on_button3_clicked(GtkButton *b)
@@ -105,9 +118,13 @@ void on_saveFile_clicked(GtkButton *b)
 void on_solveButton_clicked(GtkWidget *b)
 {
 	gtk_widget_hide(saveLabel);
-	printf("pomme\n");
-	solve("../solverSudoku/sudoku");
-	printf("work\n");
+	GtkTextIter begin, end;
+	gchar *text;
+	gtk_text_buffer_get_iter_at_offset(GTK_TEXT_BUFFER(TextBuffer), &begin, (gint) 0);
+	gtk_text_buffer_get_iter_at_offset(GTK_TEXT_BUFFER(TextBuffer), &end, (gint) -1);
+	text = gtk_text_buffer_get_text(GTK_TEXT_BUFFER(TextBuffer), &begin, &end, TRUE);
+	char *solvedSudoku = solve(text);
+	gtk_text_buffer_set_text(TextBuffer2, (const gchar *) solvedSudoku, (gint) -1);
 }
 
 void on_chooser_file_activated(GtkFileChooserButton *b)
@@ -291,11 +308,10 @@ void on_saveText_clicked(GtkButton *b)
 	gtk_text_buffer_get_iter_at_offset(GTK_TEXT_BUFFER(TextBuffer), &end, (gint) -1);
 
 	text = gtk_text_buffer_get_text(GTK_TEXT_BUFFER(TextBuffer), &begin, &end, TRUE);
-	printf(".......\n%s\n.......\n", text);
+	printf("#######\n%s\n#######\n", text);
 	gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(TextView), FALSE);
 	gtk_text_view_set_editable(GTK_TEXT_VIEW(TextView), FALSE);
 	gtk_widget_hide(saveText);
-
 }
 
 void on_editText_clicked(GtkButton *b)
