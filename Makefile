@@ -1,6 +1,6 @@
 CC = gcc
 
-dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o hough.o sobel.o edgeDetector.o
+dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o hough.o sobel.o edgeDetector.o vector.o
 dependeciesNN = network.o matrix.o neuralNetwork.o
 dependeciesCut = cutting.o cut.o manipulatePixel.o
 
@@ -30,10 +30,12 @@ grayscale: grayscale.o manipulatePixel.o
 manipulatePixel: manipulatePixel.o
 blur: pixel_operations.o Blur.o
 threshold: threshold.o manipulatePixel.o
-hough: hough.o manipulatePixel.o
+hough: hough.o manipulatePixel.o vector.o
 edgeDetector: edgeDetector.o manipulatePixel.o
 sobel: sobel.o manipulatePixel.o
 
+vector.o: manipulateImage/vector.h
+	gcc -c -g manipulateImage/vector.c -lSDL2 -lSDL2main -lSDL2_image
 image.o: manipulateImage/openImage.h manipulateImage/grayscale.h
 	gcc -c -g manipulateImage/image.c -lSDL2 -lSDL2main -lSDL2_image
 openImage.o:

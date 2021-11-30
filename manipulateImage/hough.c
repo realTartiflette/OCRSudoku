@@ -5,97 +5,204 @@
 #include <math.h>
 #include "manipulatePixel.h"
 #include "hough.h"
+#include "vector.h"
+#define VECTOR_INIT_CAPACITY 6
+#define UNDEFINE  -1
+#define SUCCESS 0
+#define VECTOR_INIT(vec) vector vec;\
+ vector_init(&vec)
+//Store and track the stored data
 
-char* houghTransform(char* path)
+
+struct couple 
 {
-    SDL_Surface* img = IMG_Load(path);
-	char* name = "results/hough.jpg";
+    int x;
+    int y;
+};
 
-    int width = img->w;
-    int height = img->h;
+struct couple_2
+{
+    struct couple x;
+    struct couple y;
+};
 
-    Uint8 r;
-    Uint8 g;
-    Uint8 b;
+void DrawLine(SDL_Surface *img, int x1, int y1, int x2, int y2)
+{
+    Uint32 pixel = SDL_MapRGB(img -> format, 255, 0, 0);
 
-    int max_d = sqrt((width*width) + (height*height));
-    int min_d = -1 * max_d;
-    int max_theta = 180;
-    int min_theta = 0;
-    int threshold = 800;
-    
-    //int* accu = calloc(2*max_d*180, sizeof(int));
-    int accu[4*max_d][180];
-    for (int i = 0; i < 2*max_d; i++)
+    int dx, dy, p, x, y;
+
+    dx = x2 - x1;
+    dy = y2 - y1;
+
+    x = x1;
+    y = y1;
+
+    p = 2 * dy - dx;
+
+    while (x < x2)
     {
-        for (int j = 0; j < 180; j++)
+        if (p >= 0)
         {
-            accu[i][j] = 0;;
-        }
-    }
-
-    for (int x = 0; x < width; x++)
-    {
-        for (int y = 0; y < height; y++)
-        {
-			SDL_GetRGB(GetPixel(img, x, y), img->format, &r, &g, &b);
-			if (r == 255)
+            if (x >= 0 && x < img -> h && y >= 0 && y < img -> w)
             {
-                for (int theta = min_theta; theta < max_theta; theta++)
-                {
-                    int rho = x*cos(theta) + y*sin(theta);
-                    rho += max_d;
-                    
-                    accu[rho][theta]++;
-                }
+                PutPixel(img, y, x, pixel);
             }
-        }
-    }
+            y += 1;
+            p = p + 2 * dy - 2 * dx;
 
-    for (int i = 0; i < 2*max_d; i++)
-    {
-        for (int theta = 0; theta < 180; theta++)
-        {
-            //printf("acc = %i\n", accu[i][theta]);
-            if (accu[i][theta] > threshold)
-            {
-                float rho = i + min_d; 
-                float a = cos(theta*(M_PI/180));
-                float b = sin(theta*(M_PI/180));
-                float x0 = (a*rho) + width/2;
-                float y0 = (b*rho) + height/2;
-                int x1 = x0+1000*(-b);
-                int y1 = y0+1000*a;
-                int x2 = x0-1000*(-b);
-                int y2 = y0-1000*a;
-
-                int dx = x2 - x1;
-                int dy = y2 - y1;
-
-                /*printf("a = %f\n", a);
-                printf("b = %f\n", b);
-                printf("x0 = %i\n", x0);
-                printf("x1 = %i\n", x1);
-                printf("dx = %i\n", dx);
-                printf("dy = %i\n", dy);*/
-
-                for (int x = x1; x < x2; x++)
-                {
-                    int y = y1+dy*(x-x1)/dx;
-                    if (x < width && x > 0 && y < height && y > 0)
-                    {
-                        Uint32 averagePixel = SDL_MapRGB(img->format, 255, 0, 0);
-			            PutPixel(img, x, y, averagePixel);
-                    }
-                    
-                }
-            }
             
         }
+        else
+        {
+            if (x >= 0 && x < img -> h && y >= 0 && y < img -> w)
+            {
+                PutPixel(img, y, x, pixel);
+            }
+            p = p + 2 * dy;
+            
+        }
+
+        x += 1;
+    }
+}
+
+
+int HoughTransform(char path[],int threshold)  
+{  
+    SDL_Surface* img = IMG_Load(path);
+    SDL_Surface* newIMG = img;
+    int w = img->w;  
+    int h = img->h;  
+    unsigned char *data = (unsigned char*)(img->pixels);
+    //Create the accu
+    double hough_h;
+    if (img->h>img->w)
+    {
+        hough_h =((sqrt(2.0) * (double)(img->h))/2.0);
+
+    }
+    else
+    {
+        hough_h =((sqrt(2.0) * (double)(img->w))/2.0);
+    }
+    int _accu_h = hough_h * 2.0; // -r -> +r  
+    int _accu_w = 180;  
+    unsigned int*_accu = (unsigned int*)calloc(_accu_h * _accu_w, sizeof(unsigned int));  
+    int center_x = w/2;  
+    int center_y = h/2;  
+    for(int y=0;y<h;y++)  
+    {  
+        for(int x=0;x<w;x++)  
+        {  
+            if( data[ (y*w) + x] > 250 )  
+            {  
+               for(int t=0;t<180;t++)  
+               { 
+                   double r = ( ((double)x - center_x) * cos((double)t * (M_PI/180.0))) + (((double)y - center_y) * sin((double)t * (M_PI/180.0)));  
+                  _accu[ (int)((round(r + hough_h) * 180.0)) + t]++;  
+               }  
+            }  
+        }  
     }
 
-    //for (int)
-    IMG_SaveJPG(img, name, 100);
-	return name;
+    //Transform
 
+    if(threshold == 0)
+        threshold = w>h?w/4:h/4;
+
+
+    
+
+    //Search the accumulator
+    vector lines = GetLines(threshold,img,_accu_w,_accu_h,_accu);
+
+    //Draw the results
+    
+    for(int i=0;i<vectorTotal(&lines);i++)
+    {
+        struct couple_2 *ligne=vectorGet(&lines,i);
+        struct couple couplex=ligne->x;
+        struct couple coupley=ligne->y;
+        DrawLine(newIMG,couplex.x,coupley.y,coupley.x,coupley.y);
+    }
+    free(_accu);
+    IMG_SaveJPG(newIMG, "hough.jpg",100);   
+
+    return 0;  
+}  
+
+vector GetLines(int threshold, SDL_Surface *img,int _accu_w,int _accu_h,unsigned int *_accu)
+{
+    VECTOR_INIT(lines);
+    if(_accu == 0)
+        return lines;
+
+    for(int r=0;r<_accu_h;r++)
+    {
+        for(int t=0;t<_accu_w;t++)
+        {
+            if((int)_accu[(r*_accu_w) + t] >= threshold)
+            {
+                //Is this point a local maxima (9x9)
+                int max = _accu[(r*_accu_w) + t];
+                for(int ly=-4;ly<=4;ly++)
+                {
+                    for(int lx=-4;lx<=4;lx++)
+                    {
+                        if( (ly+r>=0 && ly+r<_accu_h) && (lx+t>=0 && lx+t<_accu_w)  )
+                        {
+                            if( (int)_accu[( (r+ly)*_accu_w) + (t+lx)] > max )
+                            {
+                                max = _accu[( (r+ly)*_accu_w) + (t+lx)];
+                                ly = lx = 5;
+                            }
+                        }
+                    }
+                }
+                if(max > (int)_accu[(r*_accu_w) + t])
+                    continue;
+
+
+                int x1, y1, x2, y2;
+                x1 = y1 = x2 = y2 = 0;
+
+                if(t >= 45 && t <= 135)
+                {
+                    //y = (r - x cos(t)) / sin(t)
+                    x1 = 0;
+                    y1 = ((double)(r-(_accu_h/2)) - ((x1 - (img->w/2) ) * cos(t * M_PI/180.0))) / sin(t * M_PI/180.0) + (img->h / 2);
+                    x2 = img->w - 0;
+                    y2 = ((double)(r-(_accu_h/2)) - ((x2 - (img->w/2) ) * cos(t * M_PI/180.0))) / sin(t * M_PI/180.0) + (img->h / 2);
+                }
+                else
+                {
+                    //x = (r - y sin(t)) / cos(t);
+                    y1 = 0;
+                    x1 = ((double)(r-(_accu_h/2)) - ((y1 - (img->h/2) ) * sin(t * M_PI/180.0))) / cos(t * M_PI/180.0) + (img->w / 2);
+                    y2 = img->h - 0;
+                    x2 = ((double)(r-(_accu_h/2)) - ((y2 - (img->h/2) ) * sin(t * M_PI/180.0))) / cos(t * M_PI/180.0) + (img->w / 2);
+                }
+                struct couple couple1 =
+                {
+                    x1,
+                    y1,
+                };
+                struct couple couple2 =
+                {
+                    x2,
+                    y2,
+                };
+                struct couple_2 couple3 =
+                {
+                    couple1,
+                    couple2,
+                };
+                lines.pfVectorAdd(&lines,&couple3);
+
+            }
+        }
+    }
+    return lines;
 }
+
