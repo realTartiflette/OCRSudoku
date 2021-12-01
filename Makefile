@@ -10,7 +10,7 @@ LDFLAGS=
 LDLIBS = `pkg-config --libs sdl2` -lSDL2_image
 
 
-all: image neuralNetwork solver cutting rotate
+all: image network solver cutting
 
 image: $(dependeciesImage)
 	gcc $(dependeciesImage) $(LDLIBS) -o image -lm
