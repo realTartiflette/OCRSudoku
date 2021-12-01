@@ -70,7 +70,7 @@ char* GaussianBlur(char path[])
     {
 	    for (int j=0;j<height;j++)
 	    {
-            Uint32 pixel = moyenne(img, i, j, 5);
+            Uint32 pixel = moyenne(img, i, j, 2);
 		    PutPixel(newIMG, i, j, pixel);
 	    }
     }
