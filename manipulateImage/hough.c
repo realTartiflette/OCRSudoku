@@ -52,15 +52,19 @@ int HoughTransform(char path[],int threshold)
     unsigned int*_accu = (unsigned int*)calloc(_accu_h * _accu_w, sizeof(unsigned int));  
     int center_x = w/2;  
     int center_y = h/2;  
+    Uint8 r, g, _b;
+    Uint32 pixel;
     for(int y=0;y<h;y++)  
     {  
         for(int x=0;x<w;x++)  
         {  
-            if( data[ (y*w) + x] > 250 )  
+            pixel = GetPixel(newIMG, x, y);
+            SDL_GetRGB(pixel, newIMG -> format, &r, &g, &_b);
+            if( r == 255 && g == 255 && _b == 255 )  
             {  
                for(int t=0;t<180;t++)  
                { 
-                   double r = ( ((double)x - center_x) * cos((double)t * (M_PI/180.0))) + (((double)y - center_y) * sin((double)t * (M_PI/180.0)));  
+                   double r = ( ((double)x - center_x) * cos((double)t * 0.017453293)) + (((double)y - center_y) * sin((double)t * 0.017453293));  
                   _accu[ (int)((round(r + hough_h) * 180.0)) + t]++;  
                }  
             }  
@@ -70,23 +74,13 @@ int HoughTransform(char path[],int threshold)
     //Transform
 
     if(threshold == 0)
-        threshold = 300;
+        threshold = 500;
 
     //Search the accumulator
     vector lines = GetLines(threshold,img,_accu_w,_accu_h,_accu,newIMG);
 
     //Draw the results
-    printf("%d\n",vectorTotal(&lines) );
-    for(int i=0;i<(vectorTotal(&lines));i++)
-    {
-        struct couple_2 *ligne=vectorGet(&lines,i);
-        struct couple couplex=(*ligne).x;
-        struct couple coupley=(*ligne).y;
-        printf("%d %d\n",couplex.x,couplex.y );
-        //printf("%d\n %d\n",coupley.x,coupley.y );
 
-        //drawLine(newIMG,couplex.x,coupley.y,coupley.x,coupley.y);
-    }
     free(_accu);
     IMG_SaveJPG(newIMG, "hough.jpg",100);   
 
@@ -132,17 +126,17 @@ vector GetLines(int threshold, SDL_Surface *img,int _accu_w,int _accu_h,unsigned
                 {
                     //y = (r - x cos(t)) / sin(t)
                     x1 = 0;
-                    y1 = ((double)(r-(_accu_h/2)) - ((x1 - (img->w/2) ) * cos(t * M_PI/180.0))) / sin(t * M_PI/180.0) + (img->h / 2);
+                    y1 = ((double)(r-(_accu_h/2)) - ((x1 - (img->w/2) ) * cos(t * 0.017453293))) / sin(t * 0.017453293) + (img->h / 2);
                     x2 = img->w - 0;
-                    y2 = ((double)(r-(_accu_h/2)) - ((x2 - (img->w/2) ) * cos(t * M_PI/180.0))) / sin(t * M_PI/180.0) + (img->h / 2);
+                    y2 = ((double)(r-(_accu_h/2)) - ((x2 - (img->w/2) ) * cos(t * 0.017453293))) / sin(t * 0.017453293) + (img->h / 2);
                 }
                 else
                 {
                     //x = (r - y sin(t)) / cos(t);
                     y1 = 0;
-                    x1 = ((double)(r-(_accu_h/2)) - ((y1 - (img->h/2) ) * sin(t * M_PI/180.0))) / cos(t * M_PI/180.0) + (img->w / 2);
+                    x1 = ((double)(r-(_accu_h/2)) - ((y1 - (img->h/2) ) * sin(t * 0.017453293))) / cos(t * 0.017453293) + (img->w / 2);
                     y2 = img->h - 0;
-                    x2 = ((double)(r-(_accu_h/2)) - ((y2 - (img->h/2) ) * sin(t * M_PI/180.0))) / cos(t * M_PI/180.0) + (img->w / 2);
+                    x2 = ((double)(r-(_accu_h/2)) - ((y2 - (img->h/2) ) * sin(t * 0.017453293))) / cos(t * 0.017453293) + (img->w / 2);
                 }
                 struct couple couple1 =
                 {
@@ -159,12 +153,12 @@ vector GetLines(int threshold, SDL_Surface *img,int _accu_w,int _accu_h,unsigned
                     couple1,
                     couple2,
                 };
-                //printf("%d %d\n",couple1.x,couple1.y );
-                //printf("%d\n %d\n",couple2.x,couple2.y );
+                printf("%d %d\n",couple1.x,couple1.y );
+                printf("%d %d\n",couple2.x,couple2.y );
 
                 struct couple couplex=couple3.x;
                 struct couple coupley=couple3.y;
-                drawLine(newIMG,couplex.x,coupley.y,coupley.x,coupley.y);
+                drawLine(newIMG,couplex.x,couplex.y,coupley.x,coupley.y);
 
 
                 //printf("%d %d\n",couplex.x,couplex.y );
