@@ -20,7 +20,6 @@ int main(int argc, char **argv)
 		name = Threshold(name, 1);
 		name = GaussianBlur(name);
 		name = sobel(name);
-		name = detectLine(name);
 		HoughTransform(name,0);
 		//printf("%s\n",DetectedLine);
 		exit(EXIT_SUCCESS);

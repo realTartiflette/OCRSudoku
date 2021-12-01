@@ -6,6 +6,7 @@
 #include "manipulatePixel.h"
 #include "hough.h"
 #include "vector.h"
+#include "edgeDetector.h"
 #define VECTOR_INIT_CAPACITY 6
 #define UNDEFINE  -1
 #define SUCCESS 0
@@ -26,46 +27,6 @@ struct couple_2
     struct couple y;
 };
 
-void DrawLine(SDL_Surface *img, int x1, int y1, int x2, int y2)
-{
-    Uint32 pixel = SDL_MapRGB(img -> format, 255, 0, 0);
-
-    int dx, dy, p, x, y;
-
-    dx = x2 - x1;
-    dy = y2 - y1;
-
-    x = x1;
-    y = y1;
-
-    p = 2 * dy - dx;
-
-    while (x < x2)
-    {
-        if (p >= 0)
-        {
-            if (x >= 0 && x < img -> h && y >= 0 && y < img -> w)
-            {
-                PutPixel(img, y, x, pixel);
-            }
-            y += 1;
-            p = p + 2 * dy - 2 * dx;
-
-            
-        }
-        else
-        {
-            if (x >= 0 && x < img -> h && y >= 0 && y < img -> w)
-            {
-                PutPixel(img, y, x, pixel);
-            }
-            p = p + 2 * dy;
-            
-        }
-
-        x += 1;
-    }
-}
 
 
 int HoughTransform(char path[],int threshold)  
@@ -109,22 +70,22 @@ int HoughTransform(char path[],int threshold)
     //Transform
 
     if(threshold == 0)
-        threshold = w>h?w/4:h/4;
-
-
-    
+        threshold = 300;
 
     //Search the accumulator
-    vector lines = GetLines(threshold,img,_accu_w,_accu_h,_accu);
+    vector lines = GetLines(threshold,img,_accu_w,_accu_h,_accu,newIMG);
 
     //Draw the results
-    
-    for(int i=0;i<vectorTotal(&lines);i++)
+    printf("%d\n",vectorTotal(&lines) );
+    for(int i=0;i<(vectorTotal(&lines));i++)
     {
         struct couple_2 *ligne=vectorGet(&lines,i);
-        struct couple couplex=ligne->x;
-        struct couple coupley=ligne->y;
-        DrawLine(newIMG,couplex.x,coupley.y,coupley.x,coupley.y);
+        struct couple couplex=(*ligne).x;
+        struct couple coupley=(*ligne).y;
+        printf("%d %d\n",couplex.x,couplex.y );
+        //printf("%d\n %d\n",coupley.x,coupley.y );
+
+        //drawLine(newIMG,couplex.x,coupley.y,coupley.x,coupley.y);
     }
     free(_accu);
     IMG_SaveJPG(newIMG, "hough.jpg",100);   
@@ -132,7 +93,7 @@ int HoughTransform(char path[],int threshold)
     return 0;  
 }  
 
-vector GetLines(int threshold, SDL_Surface *img,int _accu_w,int _accu_h,unsigned int *_accu)
+vector GetLines(int threshold, SDL_Surface *img,int _accu_w,int _accu_h,unsigned int *_accu,SDL_Surface* newIMG)
 {
     VECTOR_INIT(lines);
     if(_accu == 0)
@@ -198,7 +159,18 @@ vector GetLines(int threshold, SDL_Surface *img,int _accu_w,int _accu_h,unsigned
                     couple1,
                     couple2,
                 };
-                lines.pfVectorAdd(&lines,&couple3);
+                //printf("%d %d\n",couple1.x,couple1.y );
+                //printf("%d\n %d\n",couple2.x,couple2.y );
+
+                struct couple couplex=couple3.x;
+                struct couple coupley=couple3.y;
+                drawLine(newIMG,couplex.x,coupley.y,coupley.x,coupley.y);
+
+
+                //printf("%d %d\n",couplex.x,couplex.y );
+                //printf("%d\n %d\n",coupley.x,coupley.y );
+
+                vectorPushBack(&lines, &couple3);
 
             }
         }
