@@ -2,7 +2,7 @@
 #define BIG_LINE_DETECTION_H
 
 
-char* Detection(char* path);
+int* Detection(char* path);
 
 
 #endif

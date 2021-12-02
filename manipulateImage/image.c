@@ -21,7 +21,8 @@ int main(int argc, char **argv)
 		name = Threshold(name, 1);
 		name = GaussianBlur(name);
 		name = sobel(name);
-		name = Detection(name);
+		int* res = Detection(name);
+		free(res);
 		//name = detectLine(name);
 		//name = houghTransform(name);
 		exit(EXIT_SUCCESS);
