@@ -1,6 +1,6 @@
 CC = gcc
 
-dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o hough.o sobel.o edgeDetector.o
+dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o hough.o sobel.o edgeDetector.o big_line_detection.o
 dependeciesNN = network.o matrix.o neuralNetwork.o
 dependeciesCut = cutting.o cut.o manipulatePixel.o
 
@@ -33,6 +33,7 @@ threshold: threshold.o manipulatePixel.o
 hough: hough.o manipulatePixel.o
 edgeDetector: edgeDetector.o manipulatePixel.o
 sobel: sobel.o manipulatePixel.o
+big_line_detection: big_line_detection.o
 
 image.o: manipulateImage/openImage.h manipulateImage/grayscale.h
 	gcc -c -g manipulateImage/image.c -lSDL2 -lSDL2main -lSDL2_image
@@ -52,6 +53,8 @@ hough.o:
 	gcc -c -g manipulateImage/hough.c -lSDL2 -lSDL2main -lSDL2_image
 sobel.o:
 	gcc -c -g manipulateImage/sobel.c -lSDL2 -lSDL2main -lSDL2_image
+big_line_detection.o:
+	gcc -c -g manipulateImage/big_line_detection.c -lSDL2 -lSDL2main -lSDL2_image
 
 
 #neural network

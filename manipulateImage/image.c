@@ -6,9 +6,10 @@
 #include "grayscale.h"
 #include "blur.h"
 #include "threshold.h"
-#include "edgeDetector.h"
+//#include "edgeDetector.h"
 #include "hough.h"
 #include "sobel.h"
+#include "big_line_detection.h"
 
 
 int main(int argc, char **argv)
@@ -20,7 +21,8 @@ int main(int argc, char **argv)
 		name = Threshold(name, 1);
 		name = GaussianBlur(name);
 		name = sobel(name);
-		name = detectLine(name);
+		name = Detection(name);
+		//name = detectLine(name);
 		//name = houghTransform(name);
 		exit(EXIT_SUCCESS);
 
