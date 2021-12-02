@@ -267,7 +267,7 @@ char *solve(char *input)
             else
             {
                 output = (char *)malloc(21);// /!\ /!\ /!\ Modify this value if you modify the text
-                putText("2grid can't be solved", output);
+                putText("grid can't be solved", output);
             }
         }
         else if(res==1)
