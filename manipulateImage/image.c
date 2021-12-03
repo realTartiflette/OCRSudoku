@@ -10,6 +10,7 @@
 #include "hough.h"
 #include "sobel.h"
 #include "big_line_detection.h"
+#include"../Cutting/cut.h"
 
 
 int main(int argc, char **argv)
@@ -22,6 +23,8 @@ int main(int argc, char **argv)
 		name = GaussianBlur(name);
 		name = sobel(name);
 		int* res = Detection(name);
+        SDL_Surface* img = IMG_Load(name);
+        CutGrid(img, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
 		free(res);
 		//name = detectLine(name);
 		//name = houghTransform(name);
