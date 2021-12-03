@@ -30,19 +30,26 @@ void CutGrid(SDL_Surface* img,size_t x1,size_t y1,size_t x2, size_t y2)
 {
 	size_t plusx = (x2-x1)/9;
 	size_t plusy = (y2-y1)/9;
-	if(x2<img->w && y2 < img->h)
+	int x = 0;
+    int y = 0;
+    if(x2<img->w && y2 < img->h)
 	{
 		for(size_t i = x1;i<=x2-plusx && i<img->w;i+=plusx)
 		{
+            y = 0;
 			for(size_t j = y1;j<=y2-plusy && j < img->h;j+=plusy)
 			{
 				char nameImg[]="results/0_0.jpeg";
-				nameImg[8] = (i-x1)%11 +48;
-				nameImg[10] = (j-y1)%11+48;
-				SDL_Surface* new_img = Cut(img,i,j,i+plusx,j+plusy);
+				nameImg[8] = x +48;
+				nameImg[10] = y +48;
+                SDL_Surface* new_img = Cut(img,i,j,i+plusx,j+plusy);
 				IMG_SaveJPG(new_img, nameImg,100);
 				SDL_FreeSurface(new_img);
+                y++;
 			}
+            x++;
 		}
 	}
+    else
+        printf("error in dimmention in CutGrid");
 }

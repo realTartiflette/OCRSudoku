@@ -6,17 +6,29 @@
 #include "grayscale.h"
 #include "blur.h"
 #include "threshold.h"
-#include "edgeDetector.h"
+//#include "edgeDetector.h"
+#include "hough.h"
+#include "sobel.h"
+#include "big_line_detection.h"
+#include"../Cutting/cut.h"
+
 
 int main(int argc, char **argv)
 {
 	if (argc == 2)
 	{
-	
-		char* name = Grayscale(argv[1]);
-		//name = GaussianBlur(name);
-		name = Threshold(name, 1);
-		name = detectLine(name);
+    
+		SDL_Surface *BaseImg = IMG_Load(argv[1]);
+		SDL_Surface *grayImg = Grayscale(BaseImg);
+		SDL_Surface *thresholdImg = Threshold(grayImg, 1);
+		SDL_Surface *blurImg = GaussianBlur(thresholdImg);
+		SDL_Surface *sobelImg = sobel(blurImg);
+		int* res = Detection(sobelImg);
+        CutGrid(thresholdImg, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
+		free(res);
+		//name = detectLine(name);
+		//name = houghTransform(name);
+
 		exit(EXIT_SUCCESS);
 
 	}	
