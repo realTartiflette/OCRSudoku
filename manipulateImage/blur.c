@@ -57,9 +57,8 @@ static Uint32 moyenne(SDL_Surface *surface, int i, int j, int n)
         return SDL_MapRGB(surface->format, sum_r / nb_pixel, sum_g / nb_pixel, sum_b / nb_pixel);
 }
 
-char* GaussianBlur(char path[])
+SDL_Surface *GaussianBlur(SDL_Surface * img)
 {
-    SDL_Surface* img = IMG_Load(path);
 	char* name = "results/blurIMG.jpg";
 
     SDL_Surface* newIMG = SDL_CreateRGBSurface(0, img->w, img->h, 32, 0, 0, 0 ,0);
@@ -75,6 +74,6 @@ char* GaussianBlur(char path[])
 	    }
     }
     IMG_SavePNG(newIMG, name);
-	return name;
+	return newIMG;
 }
 

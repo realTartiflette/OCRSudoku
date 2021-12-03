@@ -14,9 +14,8 @@ Uint8 normalize(int Gx, int Gy)
     return (Uint8)n;
 }
 
-char* sobel(char path[])
+SDL_Surface *sobel(SDL_Surface *img)
 {
-    SDL_Surface* img = IMG_Load(path);
 	SDL_Surface* newIMG = SDL_CreateRGBSurface(0, img->w, img->h, 32, 0, 0, 0 ,0);
 	char* name = "results/sobelIMG.jpg";
 
@@ -71,5 +70,5 @@ char* sobel(char path[])
     }
 
     IMG_SaveJPG(newIMG, name, 100);
-	return name;
+	return newIMG;
 }

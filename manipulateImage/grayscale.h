@@ -1,6 +1,6 @@
 #ifndef GRAYSCALE_H
 #define GRAYSCALE_H
 
-char* Grayscale(char path[]);
+SDL_Surface* Grayscale(SDL_Surface* img);
 
 #endif

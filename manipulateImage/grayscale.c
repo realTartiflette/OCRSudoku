@@ -4,9 +4,8 @@
 #include <stdlib.h>
 #include "manipulatePixel.h"
 
-char* Grayscale(char path[])
+SDL_Surface* Grayscale(SDL_Surface* img)
 {
-	SDL_Surface* img = IMG_Load(path);
 	char* name = "results/grayscaleIMG.jpg";
 	SDL_Surface* newIMG = SDL_CreateRGBSurface(0, img->w, img->h, 32, 0, 0, 0 ,0);
 
@@ -30,5 +29,5 @@ char* Grayscale(char path[])
 	
 	IMG_SaveJPG(newIMG, name, 100);
 	//IMG_SavePNG(newIMG, name);
-	return name;
+	return newIMG;
 }
