@@ -1,7 +1,8 @@
 CC = gcc
 
 dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o hough.o sobel.o edgeDetector.o big_line_detection.o cut.o
-dependeciesNN = network.o matrix.o neuralNetwork.o
+
+dependeciesNN = network.o matrix.o neuralNetwork.o initNetwork.o manipulatePixel.o
 dependeciesCut = cutting.o cut.o manipulatePixel.o
 
 CPPFLAGS= `pkg-config --cflags sdl2` -MMD
@@ -10,13 +11,13 @@ LDFLAGS=
 LDLIBS = `pkg-config --libs sdl2` -lSDL2_image
 
 
-all: image neuralNetwork solver cutting rotate
+all: image network solver cutting
 
 image: $(dependeciesImage)
 	gcc -g $(dependeciesImage) $(LDLIBS) -o image -lm
 
 network: $(dependeciesNN)
-	gcc $(dependeciesNN) -o network -lm
+	gcc $(dependeciesNN) $(LDLIBS) -o network -lm -g
 
 solver: solver.o
 	gcc solver.o -o solver
@@ -30,12 +31,14 @@ grayscale: grayscale.o manipulatePixel.o
 manipulatePixel: manipulatePixel.o
 blur: pixel_operations.o Blur.o
 threshold: threshold.o manipulatePixel.o
-hough: hough.o manipulatePixel.o
+hough: hough.o manipulatePixel.o vector.o
 edgeDetector: edgeDetector.o manipulatePixel.o
 sobel: sobel.o manipulatePixel.o
 big_line_detection: big_line_detection.o
 cut: cut.o manipulatePixel.o
 
+vector.o: manipulateImage/vector.h
+	gcc -c -g manipulateImage/vector.c -lSDL2 -lSDL2main -lSDL2_image
 image.o: manipulateImage/openImage.h manipulateImage/grayscale.h
 	gcc -c -g manipulateImage/image.c -lSDL2 -lSDL2main -lSDL2_image
 openImage.o:
@@ -61,12 +64,14 @@ cut.o: Cutting/cut.h
 
 #neural network
 
-network.o: neuralNetwork/neuralNetwork.h
-	gcc -c neuralNetwork/network.c
+network.o: neuralNetwork/initNetwork.h
+	gcc -c neuralNetwork/network.c -g
 matrix.o: neuralNetwork/matrix.h
-	gcc -c neuralNetwork/matrix.c
+	gcc -c neuralNetwork/matrix.c -g
 neuralNetwork.o: neuralNetwork/neuralNetwork.h
-	gcc -c neuralNetwork/neuralNetwork.c
+	gcc -c neuralNetwork/neuralNetwork.c -g
+initNetwork.o: neuralNetwork/initNetwork.h manipulateImage/manipulatePixel.h
+	gcc -c neuralNetwork/initNetwork.c -g -lSDL2 -lSDL2main -lSDL2_image
 
 #solver
 solver.o: solverSudoku/solver.c

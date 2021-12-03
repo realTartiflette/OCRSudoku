@@ -25,8 +25,6 @@ int main(int argc, char **argv)
 		int* res = Detection(sobelImg);
         CutGrid(thresholdImg, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
 		free(res);
-		//name = detectLine(name);
-		//name = houghTransform(name);
 		exit(EXIT_SUCCESS);
 
 	}	
