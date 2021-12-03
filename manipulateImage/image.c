@@ -17,6 +17,7 @@ int main(int argc, char **argv)
 {
 	if (argc == 2)
 	{
+    
 		SDL_Surface *BaseImg = IMG_Load(argv[1]);
 		SDL_Surface *grayImg = Grayscale(BaseImg);
 		SDL_Surface *thresholdImg = Threshold(grayImg, 1);
@@ -27,6 +28,7 @@ int main(int argc, char **argv)
 		free(res);
 		//name = detectLine(name);
 		//name = houghTransform(name);
+
 		exit(EXIT_SUCCESS);
 
 	}	
