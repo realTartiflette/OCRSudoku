@@ -1,9 +1,8 @@
 CC = gcc
 
-dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o hough.o sobel.o edgeDetector.o big_line_detection.o cut.o
+dependeciesImage = image.o manipulatePixel.o grayscale.o blur.o threshold.o sobel.o big_line_detection.o cut.o autoRotate.o
 
 dependeciesNN = network.o matrix.o neuralNetwork.o initNetwork.o manipulatePixel.o
-dependeciesCut = cutting.o cut.o manipulatePixel.o
 
 CPPFLAGS= `pkg-config --cflags sdl2` -MMD
 CGLAGS= -Wall -Wextra -Werror -std=c99 -03
@@ -22,27 +21,18 @@ network: $(dependeciesNN)
 solver: solver.o
 	gcc solver.o -o solver
 
-cutting: ${dependeciesCut}
-	gcc $(dependeciesCut) $(LDLIBS) -o cutting -lm
-
 #image :
-openImage: openImage.o
 grayscale: grayscale.o manipulatePixel.o
 manipulatePixel: manipulatePixel.o
-blur: pixel_operations.o Blur.o
+blur: manipulatePixel.o Blur.o
 threshold: threshold.o manipulatePixel.o
-hough: hough.o manipulatePixel.o vector.o
-edgeDetector: edgeDetector.o manipulatePixel.o
 sobel: sobel.o manipulatePixel.o
 big_line_detection: big_line_detection.o
 cut: cut.o manipulatePixel.o
+autoRotate: autoRotate.o manipulatePixel.o
 
-vector.o: manipulateImage/vector.h
-	gcc -c -g manipulateImage/vector.c -lSDL2 -lSDL2main -lSDL2_image
-image.o: manipulateImage/openImage.h manipulateImage/grayscale.h
+image.o: manipulateImage/grayscale.h
 	gcc -c -g manipulateImage/image.c -lSDL2 -lSDL2main -lSDL2_image
-openImage.o:
-	gcc -c -g manipulateImage/openImage.c -lSDL2 -lSDL2main -lSDL2_image
 grayscale.o: manipulateImage/manipulatePixel.h
 	gcc -c -g manipulateImage/grayscale.c -lSDL2 -lSDL2main -lSDL2_image
 manipulatePixel.o:
@@ -51,16 +41,14 @@ blur.o :
 	gcc -c -g manipulateImage/blur.c -lSDL2 -lSDL2main -lSDL2_image
 threshold.o:
 	gcc -c -g manipulateImage/threshold.c -lSDL2 -lSDL2main -lSDL2_image
-edgeDetector.o:
-	gcc -c -g manipulateImage/edgeDetector.c -lSDL2 -lSDL2main -lSDL2_image
-hough.o:
-	gcc -c -g manipulateImage/hough.c -lSDL2 -lSDL2main -lSDL2_image
 sobel.o:
 	gcc -c -g manipulateImage/sobel.c -lSDL2 -lSDL2main -lSDL2_image
 big_line_detection.o:
 	gcc -c -g manipulateImage/big_line_detection.c -lSDL2 -lSDL2main -lSDL2_image
+autoRotate.o:
+	gcc -c manipulateImage/autoRotate.c -lSDL2 -lSDL2main -lSDL2_image
 cut.o: Cutting/cut.h
-	gcc -c Cutting/cutting.c -lSDL2 -lSDL2main -lSDL2_image
+	gcc -c Cutting/cut.c -lSDL2 -lSDL2main -lSDL2_image
 
 #neural network
 
@@ -76,13 +64,6 @@ initNetwork.o: neuralNetwork/initNetwork.h manipulateImage/manipulatePixel.h
 #solver
 solver.o: solverSudoku/solver.c
 	gcc -c solverSudoku/solver.c
-
-#cutting
-
-cutting.o: Cutting/cut.h
-	gcc -c Cutting/cutting.c -lSDL2 -lSDL2main -lSDL2_image
-cut.o: Cutting/manipulatePixel.h
-	gcc -c Cutting/cut.c -lSDL2 -lSDL2main -lSDL2_image
 
 clean:
 	rm *.o results/* image network solver cutting
