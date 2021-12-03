@@ -32,6 +32,8 @@ GtkTextBuffer *TextBuffer2;
 GtkWidget *solveButton;
 GtkWidget *saveLabel;
 GtkWidget *saveFile;
+GtkWidget *combo1;
+GtkWidget *entry1;
 char tmp[1024];
 
 
@@ -63,6 +65,8 @@ int main (int argc, char *argv[])
 	solveButton = GTK_WIDGET(gtk_builder_get_object(builder, "solveButton"));
 	saveLabel = GTK_WIDGET(gtk_builder_get_object(builder, "saveLabel"));
 	saveFile = GTK_WIDGET(gtk_builder_get_object(builder, "saveFile"));
+	combo1 = GTK_WIDGET(gtk_builder_get_object(builder, "combo1"));
+	entry1 = GTK_WIDGET(gtk_builder_get_object(builder, "entry1"));
 
 
 
@@ -316,4 +320,10 @@ void on_changed_text(GtkTextBuffer *t)
 {
 	printf("*** text changed\n");
 	gtk_widget_show(saveText);
+}
+
+void on_entry1_changed(GtkEntry *e)
+{
+	printf("entry=%s\n", gtk_entry_get_text(e));
+
 }

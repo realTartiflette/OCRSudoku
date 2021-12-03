@@ -2,6 +2,26 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
+  <object class="GtkListStore" id="liststore1">
+    <columns>
+      <!-- column-name gchararray1 -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">GrayScale</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Threshold</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Sobel</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Corner detection</col>
+      </row>
+    </data>
+  </object>
   <object class="GtkWindow" id="window">
     <property name="width-request">800</property>
     <property name="height-request">600</property>
@@ -34,6 +54,30 @@
                     <property name="title" translatable="yes"/>
                     <signal name="file-set" handler="on_chooser_file_set" swapped="no"/>
                   </object>
+                </child>
+                <child>
+                  <object class="GtkComboBox" id="combo1">
+                    <property name="width-request">203</property>
+                    <property name="visible">True</property>
+                    <property name="app-paintable">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="model">liststore1</property>
+                    <property name="has-entry">True</property>
+                    <property name="entry-text-column">0</property>
+                    <child internal-child="entry">
+                      <object class="GtkEntry" id="entry1">
+                        <property name="app-paintable">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="primary-icon-name">image</property>
+                        <property name="placeholder-text" translatable="yes">Select a mode</property>
+                        <signal name="changed" handler="on_entry1_changed" swapped="no"/>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="x">437</property>
+                    <property name="y">120</property>
+                  </packing>
                 </child>
               </object>
               <packing>
