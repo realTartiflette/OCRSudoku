@@ -160,10 +160,8 @@ void maxHeight(SDL_Surface* img, int *maxYs, int *maxYe, int *maxX, int max)
     }
 }
 
-int* Detection(char* path)
+int *Detection(SDL_Surface *img)
 {
-    SDL_Surface* img = IMG_Load(path);
-	SDL_Surface* newIMG = SDL_CreateRGBSurface(0, img->w, img->h, 32, 0, 0, 0 ,0);
 	char* name = "results/detectSquare.jpg";
     
     int maxLineXs = 0;

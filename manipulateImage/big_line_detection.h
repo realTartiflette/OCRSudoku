@@ -2,7 +2,7 @@
 #define BIG_LINE_DETECTION_H
 
 
-int* Detection(char* path);
+int *Detection(SDL_Surface *img);
 
 
 #endif
