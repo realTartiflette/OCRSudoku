@@ -5,6 +5,9 @@
         "solversudoku.h": "c",
         "openimage.h": "c",
         "blur.h": "c",
-        "edgedetector.h": "c"
+        "edgedetector.h": "c",
+        "grayscale.h": "c",
+        "sobel.h": "c",
+        "cut.h": "c"
     }
 }

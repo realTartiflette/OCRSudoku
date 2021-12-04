@@ -7,7 +7,6 @@
 #include "blur.h"
 #include "threshold.h"
 //#include "edgeDetector.h"
-#include "hough.h"
 #include "sobel.h"
 #include "big_line_detection.h"
 #include"../Cutting/cut.h"
@@ -20,11 +19,12 @@ int main(int argc, char **argv)
     
 		SDL_Surface *BaseImg = IMG_Load(argv[1]);
 		SDL_Surface *grayImg = Grayscale(BaseImg);
-		SDL_Surface *thresholdImg = Threshold(grayImg, 1);
+		SDL_Surface *thresholdImg = Threshold(grayImg);
 		SDL_Surface *blurImg = GaussianBlur(thresholdImg);
 		SDL_Surface *sobelImg = sobel(blurImg);
-		int* res = Detection(sobelImg);
-        CutGrid(thresholdImg, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
+		int isFailed = 0;
+		int* res = Detection(sobelImg, &isFailed);
+		CutGrid(thresholdImg, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
 		free(res);
 		//name = detectLine(name);
 		//name = houghTransform(name);

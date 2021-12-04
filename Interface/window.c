@@ -1,5 +1,7 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include "signal.h"
 #include "ctype.h"
 #include <stdlib.h>
@@ -10,7 +12,16 @@
 #include "../manipulateImage/grayscale.h"
 #include "../manipulateImage/blur.h"
 #include "../manipulateImage/threshold.h"
-#include "../manipulateImage/edgeDetector.h"
+#include "../manipulateImage/sobel.h"
+#include "../manipulateImage/big_line_detection.h"
+#include"../Cutting/cut.h"
+
+enum {
+  COLUMN_STRING,
+  COLUMN_INT,
+  COLUMN_BOOLEAN,
+  N_COLUMNS
+};
 
 // Variables
 GtkWidget *window;
@@ -32,9 +43,11 @@ GtkTextBuffer *TextBuffer2;
 GtkWidget *solveButton;
 GtkWidget *saveLabel;
 GtkWidget *saveFile;
+GtkWidget *noGridLabel;
 GtkWidget *combo1;
 GtkWidget *entry1;
 char tmp[1024];
+int isFailed;
 
 
 
@@ -67,6 +80,7 @@ int main (int argc, char *argv[])
 	saveFile = GTK_WIDGET(gtk_builder_get_object(builder, "saveFile"));
 	combo1 = GTK_WIDGET(gtk_builder_get_object(builder, "combo1"));
 	entry1 = GTK_WIDGET(gtk_builder_get_object(builder, "entry1"));
+	noGridLabel = GTK_WIDGET(gtk_builder_get_object(builder, "noGridLabel"));
 
 
 
@@ -78,6 +92,7 @@ int main (int argc, char *argv[])
 
 	gtk_text_buffer_set_text(TextBuffer, (const gchar *) tmp, (gint) -1);
 	gtk_widget_hide(saveText);
+	gtk_widget_hide(noGridLabel);
 	gtk_widget_hide(saveLabel);
 
     // Runs the main loop.
@@ -100,10 +115,11 @@ void on_saveFile_clicked(GtkButton *b)
 		gtk_text_buffer_get_iter_at_offset(GTK_TEXT_BUFFER(TextBuffer2), &begin, (gint) 0);
 		gtk_text_buffer_get_iter_at_offset(GTK_TEXT_BUFFER(TextBuffer2), &end, (gint) -1);
 		text = gtk_text_buffer_get_text(GTK_TEXT_BUFFER(TextBuffer2), &begin, &end, TRUE);
-		//printf("%s\n", text);
-	    fprintf(saveFile, text);
+	    fprintf(saveFile,"%s",text);
 		fclose(saveFile);
-		system("mv sudokuResult.txt ~/Downloads/sudokuResult.txt");
+		int error = system("mv sudokuResult.txt ~/Downloads/sudokuResult.txt");
+		if (error)
+			return;
 	}
     
 	gtk_widget_show(saveLabel);
@@ -129,47 +145,49 @@ void on_chooser_file_activated(GtkFileChooserButton *b)
 void on_chooser_file_set(GtkWidget *b)
 {
 	gtk_widget_hide(saveLabel);
+	gtk_widget_hide(noGridLabel);
 	gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(b));
 	int len = strlen(filename);
-	if (filename[len-1] == 'g' && filename[len-2] == 'p' && filename[len-3] == 'j')
+	if ((filename[len-1] == 'g' && filename[len-2] == 'p' && filename[len-3] == 'j') ||
+		(filename[len-1] == 'g' && filename[len-2] == 'n' && filename[len-3] == 'p') || 
+		(filename[len-1] == 'p' && filename[len-2] == 'm' && filename[len-3] == 'b') ||
+		(filename[len-1] == 'g' && filename[len-2] == 'e' && filename[len-3] == 'p' && filename[len-4] == 'j'))
 	{
-		char* name = Grayscale(filename);
-		name = Threshold(name, 1);
-		name = detectLine(name);
-
-
+		SDL_Surface *BaseImg = IMG_Load(filename);
+		int error;
+		char* error1;
+		SDL_Surface *grayImg = Grayscale(BaseImg);
+		SDL_Surface *thresholdImg = Threshold(grayImg);
+		SDL_Surface *blurImg = GaussianBlur(thresholdImg);
+		SDL_Surface *sobelImg = sobel(blurImg);
+		int *res = Detection(sobelImg, &isFailed);
+		if (!isFailed)
+		{
+			CutGrid(thresholdImg, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
+			free(res);
+		}
 		char cmd[2048];
 		FILE *f1;
-		char cmd1[2048];
-		FILE *f2;
 		int j, h, v;
 		int hor = 0;
 		int ver = 200;
-		int j1, h1, v1;
-		int hor1 = 400;
-		int ver1 = 200;
-		gchar *filename1 = "results/linesDetectedIMG.jpg";
-		if (image1 && image3)
+
+		if (image1)
 		{
 			gtk_container_remove(GTK_CONTAINER(stkfxd1), image1);
-			gtk_container_remove(GTK_CONTAINER(stkfxd1), image3);
 		}
 		//gtk_widget_hide(image2);
 		
 		sprintf(cmd, "identify -format %%wx%%h \"%s\"\n", filename);
 		f1 = popen(cmd, "r");
-		sprintf(cmd1, "identify -format %%wx%%h \"%s\"\n", filename1);
-		f2 = popen(cmd1, "r");
+		
 
 		strcpy(cmd,"");
-		fgets(cmd, 512, f1);
-		strcpy(cmd1,"");
-		fgets(cmd1, 512, f2);
+		error1 = fgets(cmd, 512, f1);
 		fclose(f1);
-		fclose(f2);
+
 
 		h = v = 1;
-		h1 = v1 = 1;
 
 		if (strlen(cmd))
 		{
@@ -186,29 +204,10 @@ void on_chooser_file_set(GtkWidget *b)
 			}
 		}
 
-		if (strlen(cmd1))
-		{
-			for (j1 = 0; j1 < strlen(cmd1)-1; j1++)
-			{
-				if (cmd1[j1] == 'x')
-					break;
-			}
-			if (cmd1[j1] == 'x')
-			{
-				cmd1[j1] = 0;
-				sscanf(cmd1, "%d", &h1);
-				sscanf(&cmd1[j1+1],"%d", &v1);
-			}
-		}
 
 		if (h < 100 || v < 100)
 		{
 			printf("**** questionable image: %s\n", filename);
-			return;
-		}
-		if (h1 < 100 || v1 < 100)
-		{
-			printf("**** questionable image: %s\n", filename1);
 			return;
 		}
 
@@ -217,14 +216,14 @@ void on_chooser_file_set(GtkWidget *b)
 		int height = 300;
 
 		sprintf(cmd, "convert \"%s\" -resize %dx%d tmp.jpg", filename, width, height);
-		system(cmd);
+		error = system(cmd);
 		strcpy(filename, "tmp.jpg");
 
 		sprintf(cmd, "identify -format %%wx%%h \"%s\"\n", filename);
 		f1 = popen(cmd, "r");
 
 		strcpy(cmd,"");
-		fgets(cmd, 512, f1);
+		error1 = fgets(cmd, 512, f1);
 		fclose(f1);
 
 		h = v = 1;
@@ -249,45 +248,12 @@ void on_chooser_file_set(GtkWidget *b)
 
 		gtk_fixed_move(GTK_FIXED(stkfxd1), image1, hor, ver);
 
-		sprintf(cmd, "convert \"%s\" -resize %dx%d tmp.jpg", filename1, width, height);
-		system(cmd);
-		strcpy(filename, "tmp.jpg");
-
-		sprintf(cmd1, "identify -format %%wx%%h \"%s\"\n", filename);
-		f2 = popen(cmd, "r");
-
-		strcpy(cmd,"");
-		fgets(cmd, 512, f2);
-		fclose(f2);
-
 		
-		h1 = v1 = 1;
-
-		
-		if (strlen(cmd1))
+		error = system("rm tmp.jpg");
+		if (error || error1)
 		{
-			for (j1 = 0; j1 < strlen(cmd1)-1; j1++)
-			{
-				if (cmd1[j1] == 'x')
-					break;
-			}
-			if (cmd1[j1] == 'x')
-			{
-				cmd1[j1] = 0;
-				sscanf(cmd1, "%d", &h1);
-				sscanf(&cmd1[j1+1],"%d", &v1);
-			}
+			return;
 		}
-
-		
-
-		image3 = gtk_image_new_from_file(filename);
-		gtk_container_add(GTK_CONTAINER(stkfxd1), image3);
-		gtk_widget_show(image3);
-
-		
-		gtk_fixed_move(GTK_FIXED(stkfxd1), image3, hor1, ver1);
-		system("rm tmp.jpg");
 		//system("rm tmp1.jpg");
 	}
 
@@ -324,6 +290,119 @@ void on_changed_text(GtkTextBuffer *t)
 
 void on_entry1_changed(GtkEntry *e)
 {
-	printf("entry=%s\n", gtk_entry_get_text(e));
+	const gchar* mode = gtk_entry_get_text(e);
+	gchar* filename = "results/grayscaleIMG.jpg";
+	int error;
+	char *error1;
+	if (strcmp(mode, "GrayScale") == 0)
+	{
+		filename = "results/grayscaleIMG.jpg";
+	}
+	else if (strcmp(mode, "Threshold") == 0)
+	{
+		filename = "results/thresholdIMG.jpg";
+	}
+	else if (strcmp(mode, "Sobel") == 0)
+	{
+		filename = "results/sobelIMG.jpg";
+	}
+	else if (isFailed)
+	{
+		if (image3 != NULL)
+		{
+			gtk_container_remove(GTK_CONTAINER(stkfxd1), image3);
+		}
+			
+		gtk_widget_show(noGridLabel);
+		return;
+	}
+	else
+	{
+		filename = "results/bigLines.jpg";
+	}
+
+	char cmd[2048];
+	FILE *f1;
+	int j, h, v;
+	int hor = 400;
+	int ver = 200;
+	if (image3 != NULL)
+	{
+		gtk_container_remove(GTK_CONTAINER(stkfxd1), image3);
+	}
+	//gtk_widget_hide(image2);
+	
+	sprintf(cmd, "identify -format %%wx%%h \"%s\"\n", filename);
+	f1 = popen(cmd, "r");
+
+	strcpy(cmd,"");
+	error1 = fgets(cmd, 512, f1);
+	
+	fclose(f1);
+
+	h = v = 1;
+
+	if (strlen(cmd))
+	{
+		for (j = 0; j < strlen(cmd)-1; j++)
+		{
+			if (cmd[j] == 'x')
+				break;
+		}
+		if (cmd[j] == 'x')
+		{
+			cmd[j] = 0;
+			sscanf(cmd, "%d", &h);
+			sscanf(&cmd[j+1],"%d", &v);
+		}
+	}
+
+	if (h < 100 || v < 100)
+	{
+		printf("**** questionable image: %s\n", filename);
+		return;
+	}
+
+	int width = 300;
+	int height = 300;
+
+	sprintf(cmd, "convert \"%s\" -resize %dx%d tmp1.jpg", filename, width, height);
+	error = system(cmd);
+	//strcpy(filename, "tmp1.jpg");
+
+
+	sprintf(cmd, "identify -format %%wx%%h \"%s\"\n", "tmp1.jpg");
+	f1 = popen(cmd, "r");
+
+	strcpy(cmd,"");
+	error1 = fgets(cmd, 512, f1);
+	fclose(f1);
+
+
+	h = v = 1;
+	if (strlen(cmd))
+	{
+		for (j = 0; j < strlen(cmd)-1; j++)
+		{
+			if (cmd[j] == 'x')
+				break;
+		}
+		if (cmd[j] == 'x')
+		{
+			cmd[j] = 0;
+			sscanf(cmd, "%d", &h);
+			sscanf(&cmd[j+1],"%d", &v);
+		}
+	}
+	image3 = gtk_image_new_from_file("tmp1.jpg");
+	gtk_container_add(GTK_CONTAINER(stkfxd1), image3);
+	gtk_widget_show(image3);
+
+	gtk_fixed_move(GTK_FIXED(stkfxd1), image3, hor, ver);
+
+	
+	error = system("rm tmp1.jpg");
+	if (error || error1)
+		return;
 
 }

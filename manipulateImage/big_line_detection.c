@@ -20,17 +20,31 @@ int checkCorner(int xs, int xe, int yl, int ys, int ye, int xc)
 
 void DrawL(SDL_Surface *img, int x1, int x2, int y)
 {
+    int y1 = y-4;
+    int y2 = y+4;
     for (int x = x1; x<x2; x++)
     {
-        PutPixel(img, x, y, SDL_MapRGB(img->format, 255, 0, 0));
+        for (int j = y1; j < y2; j++)
+        {
+            if (j >= 0 && j < img->h)
+                PutPixel(img, x, j, SDL_MapRGB(img->format, 255, 0, 0));
+        }
+        
     }
 }
 
 void DrawC(SDL_Surface *img, int x, int y1, int y2)
 {
+    int x1 = x-4;
+    int x2 = x+4;
     for (int y = y1; y<y2; y++)
     {
-        PutPixel(img, x, y, SDL_MapRGB(img->format, 255, 0, 0));
+        for (int i = x1; i < x2; i++)
+        {
+            if (i >= 0 && i < img->w)
+                PutPixel(img, i, y, SDL_MapRGB(img->format, 255, 0, 0));
+        }
+
     }
 }
 
@@ -160,7 +174,7 @@ void maxHeight(SDL_Surface* img, int *maxYs, int *maxYe, int *maxX, int max)
     }
 }
 
-int *Detection(SDL_Surface *img)
+int *Detection(SDL_Surface *img, int *isFailed)
 {
 	char* name = "results/detectSquare.jpg";
     
@@ -198,8 +212,9 @@ int *Detection(SDL_Surface *img)
         {
             if (distLine < 5 || distCol < 5)
             {
+                *isFailed = 1;
                 isDetected = 1;
-                printf("Grid detection failed\n");
+        
             }
             else
             {
@@ -220,36 +235,42 @@ int *Detection(SDL_Surface *img)
 
     }
 	int* res = malloc(3*sizeof(int)); //0: dist | 1: x | 2: y
-	int p1 = abs(maxLineXs - maxColX) <= 10 && abs(maxColYs - maxLineY) <= 10;
-    int p2 = abs(maxLineXs - maxColX) <= 10 && abs(maxColYe - maxLineY) <= 10;
-    int p3 = abs(maxLineXe - maxColX) <= 10 && abs(maxColYs - maxLineY) <= 10;
-    int p4 = abs(maxLineXe - maxColX) <= 10 && abs(maxColYe - maxLineY) <= 10;
+    res[0] = res[1] = res[2] = 0;
+    
+    if (!(*isFailed))
+    {
+        int p1 = abs(maxLineXs - maxColX) <= 10 && abs(maxColYs - maxLineY) <= 10;
+        int p2 = abs(maxLineXs - maxColX) <= 10 && abs(maxColYe - maxLineY) <= 10;
+        int p3 = abs(maxLineXe - maxColX) <= 10 && abs(maxColYs - maxLineY) <= 10;
+        int p4 = abs(maxLineXe - maxColX) <= 10 && abs(maxColYe - maxLineY) <= 10;
 
-	int distLine = maxLineXe - maxLineXs;
-	int distCol = maxColYe - maxColYs;
-	int maxDist =  MAX(distLine, distCol);
-	res[0] = maxDist;
+        int distLine = maxLineXe - maxLineXs;
+        int distCol = maxColYe - maxColYs;
+        int maxDist =  MAX(distLine, distCol);
+        res[0] = maxDist;
 
-	if (p1)
-	{
-		res[1] = MIN(maxColX, maxLineXs);
-		res[2] = MIN(maxColYs, maxLineY);
-	}
-	else if (p2)
-	{
-		res[1] = MIN(maxColX, maxLineXs);
-		res[2] = MIN(maxColYe-distCol, maxLineY);
-	}
-	else if (p3)
-	{
-		res[1] = MIN(maxColX, maxLineXe-distLine);
-		res[2] = MIN(maxColYs, maxLineY);
-	}
-	else
-	{
-		res[1] = MIN(maxColX, maxLineXe-distLine);
-		res[2] = MIN(maxColYe-distCol, maxLineY);
-	}
+        if (p1)
+        {
+            res[1] = MIN(maxColX, maxLineXs);
+            res[2] = MIN(maxColYs, maxLineY);
+        }
+        else if (p2)
+        {
+            res[1] = MIN(maxColX, maxLineXs);
+            res[2] = MIN(maxColYe-distCol, maxLineY);
+        }
+        else if (p3)
+        {
+            res[1] = MIN(maxColX, maxLineXe-distLine);
+            res[2] = MIN(maxColYs, maxLineY);
+        }
+        else
+        {
+            res[1] = MIN(maxColX, maxLineXe-distLine);
+            res[2] = MIN(maxColYe-distCol, maxLineY);
+        }
+    }
+	
 
 	
     IMG_SaveJPG(img, "results/bigLines.jpg", 100);

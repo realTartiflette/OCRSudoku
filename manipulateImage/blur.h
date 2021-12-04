@@ -6,7 +6,6 @@
 
 int minimum(int x,int y);
 int maximum(int x,int y);
-static Uint32 moyenne(SDL_Surface *surface, int i, int j, int n);
 SDL_Surface *GaussianBlur(SDL_Surface *img);
 
 #endif

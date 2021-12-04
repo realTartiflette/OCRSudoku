@@ -81,4 +81,3 @@ SDL_Surface *Threshold(SDL_Surface *img, int radius)
 	IMG_SaveJPG(newIMG, name, 100);
 	return newIMG;
 }
-
