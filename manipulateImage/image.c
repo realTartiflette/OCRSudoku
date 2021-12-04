@@ -11,6 +11,7 @@
 #include "big_line_detection.h"
 #include"../Cutting/cut.h"
 #include "../neuralNetwork/initNetwork.h"
+#include "autoRotate.h"
 
 
 int main(int argc, char **argv)
@@ -21,12 +22,14 @@ int main(int argc, char **argv)
 		SDL_Surface *BaseImg = IMG_Load(argv[1]);
 		SDL_Surface *grayImg = Grayscale(BaseImg);
 		SDL_Surface *thresholdImg = Threshold(grayImg);
-		SDL_Surface *blurImg = GaussianBlur(thresholdImg);
+		double angle = autoRotation(thresholdImg);
+		SDL_Surface *rotatedImg = Rotate(thresholdImg,angle);
+		SDL_Surface *blurImg = GaussianBlur(rotatedImg);
 		SDL_Surface *sobelImg = sobel(blurImg);
 
 		int isFailed = 0;
 		int* res = Detection(sobelImg, &isFailed);
-		char **names = CutGrid(thresholdImg, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
+		char **names = CutGrid(rotatedImg, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
 		
 		/*neuralNetwork *nn = loadNetwork("number_detection");
 		

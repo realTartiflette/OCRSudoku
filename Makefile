@@ -1,6 +1,6 @@
 CC = gcc
 
-dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o sobel.o edgeDetector.o big_line_detection.o cut.o matrix.o neuralNetwork.o initNetwork.o
+dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o sobel.o edgeDetector.o big_line_detection.o cut.o matrix.o neuralNetwork.o initNetwork.o autoRotate.o
 
 dependeciesNN = network.o matrix.o neuralNetwork.o initNetwork.o
 
@@ -45,6 +45,7 @@ edgeDetector: edgeDetector.o manipulatePixel.o
 sobel: sobel.o manipulatePixel.o
 big_line_detection: big_line_detection.o
 cut: cut.o manipulatePixel.o
+autoRotate: autoRotate.o manipulatePixel.o
 
 image.o: manipulateImage/openImage.h manipulateImage/grayscale.h
 	gcc -c -g manipulateImage/image.c -lSDL2 -lSDL2main -lSDL2_image
@@ -64,9 +65,10 @@ sobel.o:
 	gcc -c -g manipulateImage/sobel.c -lSDL2 -lSDL2main -lSDL2_image
 big_line_detection.o:
 	gcc -c -g manipulateImage/big_line_detection.c -lSDL2 -lSDL2main -lSDL2_image
-
 cut.o: Cutting/cut.h Cutting/manipulatePixel.h
 	gcc -c Cutting/cut.c -lSDL2 -lSDL2main -lSDL2_image
+autoRotate.o:
+	gcc -c manipulateImage/autoRotate.c -lSDL2 -lSDL2main -lSDL2_image
 
 
 #neural network
