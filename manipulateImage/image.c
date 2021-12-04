@@ -24,10 +24,11 @@ int main(int argc, char **argv)
 		SDL_Surface *blurImg = GaussianBlur(thresholdImg);
 		SDL_Surface *sobelImg = sobel(blurImg);
 
-		int* res = Detection(sobelImg);
+		int isFailed = 0;
+		int* res = Detection(sobelImg, &isFailed);
 		char **names = CutGrid(thresholdImg, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
 		
-		neuralNetwork *nn = loadNetwork("number_detection");
+		/*neuralNetwork *nn = loadNetwork("number_detection");
 		
 		for(size_t i = 0; i < 81; i++)
 		{
@@ -44,29 +45,10 @@ int main(int argc, char **argv)
 			freeMat(resN);
 			free(names[i]);
 		}
-		matrix *dest = matAlloc(1, 2500);
-		convertImageToMat("test.png", dest);
-
-		matrix *resN = matAlloc(1, 10);
-		forwardPropagation(nn, dest, resN);
-
-		printf("%s : ", "test.png");
-		printf("%d\n", getPrediction(resN));
-		printMat(resN);
-
-		freeMat(dest);
-		freeMat(resN);
 		
 		free(names);
 		freeNetwork(nn);
-		free(res);
-
-		/*int isFailed = 0;
-		int* res = Detection(sobelImg, &isFailed);
-		CutGrid(thresholdImg, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
-		free(res);
-		//name = detectLine(name);
-		//name = houghTransform(name);*/
+		free(res);*/
 
 
 		exit(EXIT_SUCCESS);

@@ -2,10 +2,10 @@ CC = gcc
 
 dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o sobel.o edgeDetector.o big_line_detection.o cut.o matrix.o neuralNetwork.o initNetwork.o
 
-dependeciesNN = network.o matrix.o neuralNetwork.o neuralNetwork.o initNetwork.o
+dependeciesNN = network.o matrix.o neuralNetwork.o initNetwork.o
 
 dependeciesCut = cutting.o cut.o manipulatePixel.o
-dependeciesInter = window.o solverSudoku.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o sobel.o edgeDetector.o big_line_detection.o cut.o
+dependeciesInter = window.o solverSudoku.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o sobel.o edgeDetector.o big_line_detection.o cut.o matrix.o neuralNetwork.o initNetwork.o
 
 CFLAGSINTER = `pkg-config --cflags gtk+-3.0` -Wall -O3
 LIBSINTER = `pkg-config --libs gtk+-3.0` -rdynamic `pkg-config --libs sdl2` -lSDL2_image
