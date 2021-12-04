@@ -1,39 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "neuralNetwork.h"
+#include "initNetwork.h"
 int main()
 {
-	int n[MAX_LAYER] = {3};
-	neuralNetwork nn = createNeuralNetwork(2,1,n,1);
-	matrix inputs = 
+	
+	size_t n[MAX_LAYER] = {1000, 250};
+	matrix *inputs;
+	matrix *expectedResults;
+	char path[100] = "training_set/";
+
+	neuralNetwork *nn = initNetwork(path, 2, n, &inputs, &expectedResults);
+	for (size_t i = 0; i < 5; i++)
 	{
-		4,//rows
-		2,//cols
-		{
-			{0,0},
-			{1,1},
-			{0,1},
-			{1,0}
-		}
-	};
-
-	matrix expectedResuls = {
-		4, //rows
-		1, //cols
-		{
-			{0},
-			{0},
-			{1},
-			{1},
-		}
-	};
-
-	trainNetwork(&nn, inputs, expectedResuls, 5000);
-
-	matrix res;
-
-	forwardPropagation(&nn, inputs, &res);
-	printMat(inputs);
-	printMat(res);
+		printf("iter : %ld\n", i);
+		trainNetwork(nn, inputs, expectedResults, 100);
+		saveNetwork(nn, "number_detection");
+	}
+	
+	freeMat(inputs);
+	freeMat(expectedResults);
+	freeNetwork(nn);
 	return 0;
 }

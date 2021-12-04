@@ -6,32 +6,39 @@
 #define MAX_LAYER 10
 #define MAX_NEURON 10
 
-#define LEARNING_RATE 0.5
+#define LEARNING_RATE 0.01
 
 typedef struct layer layer;
 struct layer
 {
-    matrix weigths;
-    //matrix bias;
-    matrix resultLayer;
+    matrix *weigths;
+    float *bias;
+    matrix *resultLayer;
 };
 
 typedef struct neuralNetwork neuralNetwork;
+
 struct neuralNetwork
 {
-    int inputSize;
-    int nbOfHiddenLayers;
+    size_t inputSize;
+    size_t nbOfHiddenLayers;
     struct layer *hiddenLayers;
-    struct layer outputLayer;
+    struct layer *outputLayer;
 };
 
-void printNetwork(neuralNetwork nn);
+void printNetwork(neuralNetwork *nn);
 
-neuralNetwork createNeuralNetwork(int inputSize, int nbOfhidenLayers, int nbOfNeuronsByLayer[MAX_NEURON], int outputSize);
+neuralNetwork *createNeuralNetwork(size_t inputSize, size_t nbOfhidenLayers, size_t nbOfNeuronsByLayer[MAX_NEURON], size_t outputSize);
 
-void forwardPropagation(neuralNetwork *nn, matrix inputs, matrix *result);
+void freeNetwork(neuralNetwork *nn);
 
-void backwardPropagation(neuralNetwork *nn, matrix inputs, matrix expectedResults, matrix results);
+void forwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *result);
 
-void trainNetwork(neuralNetwork *nn, matrix inputs, matrix expectedResults, long nbOIter);
+void backwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *expectedResults, matrix *results, matrix *buffer);
+
+void trainNetwork(neuralNetwork *nn, matrix *inputs, matrix *expectedResults, size_t nbOIter);
+
+void saveNetwork(neuralNetwork *nn, char *filename);
+
+neuralNetwork *loadNetwork(char *filename);
 #endif
