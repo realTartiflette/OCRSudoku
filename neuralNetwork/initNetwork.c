@@ -6,6 +6,23 @@
 #include "initNetwork.h"
 #include "../manipulateImage/manipulatePixel.h"
 
+SDL_Surface* Scale(SDL_Surface* img, int newImgWidth, int newImgHeight)
+{
+    int scaleW = img -> w / newImgWidth;
+    int scaleH = img -> h / newImgHeight;
+    SDL_Surface* newIMG = SDL_CreateRGBSurface(0, newImgWidth, newImgHeight, 32, 0, 0, 0 ,0);
+    
+    for (int w = 0; w < newImgWidth; w++)
+    {
+        for (int h = 0; h < newImgHeight; h++)
+        {
+            Uint32 pixel = GetPixel(img, w*scaleW, h*scaleH);
+            PutPixel(newIMG, w, h, pixel);
+        }
+    }
+    return newIMG;
+}
+
 size_t getFilesNumber(char *path)
 {
     size_t nbOfFiles = 0;
@@ -57,8 +74,10 @@ void convertImage(char *path, matrix *inputs, size_t curRow)
     if(img->h * img->w > inputs->cols)
     {
         //resize image
-        h = 100;
-        w = 100;
+        SDL_Surface *nimg = Scale(img, 49, 49);
+        h = nimg->h, w = nimg->w;
+        SDL_FreeSurface(img);
+        img = nimg;
     }
     Uint8 r;
 	Uint8 g;
@@ -132,7 +151,6 @@ void setMatrices(char *data_set_path, matrix *inputs, matrix *expectedResults)
             strcpy(tmp, path);
             strcat(tmp, "/");
             strcat(tmp, entry->d_name);
-            
             convertImage(tmp, inputs, curRow);
 
             expectedResults->mat[curRow * expectedResults->cols + 0] = 1;
@@ -145,11 +163,31 @@ void setMatrices(char *data_set_path, matrix *inputs, matrix *expectedResults)
 
 neuralNetwork *initNetwork(char *data_set_path, size_t nbOfHiddenLayers, size_t nbOfNeuronsByLayers[MAX_LAYER], matrix **inputs, matrix **expectedResults)
 {
-    neuralNetwork *nn = createNeuralNetwork(10000, nbOfHiddenLayers, nbOfNeuronsByLayers, 10);
+    neuralNetwork *nn = createNeuralNetwork(2500, nbOfHiddenLayers, nbOfNeuronsByLayers, 10);
     
     size_t nbOfInputs = getNbOfInputs(data_set_path);
-    *inputs = matAlloc(nbOfInputs, 10000);
+    *inputs = matAlloc(nbOfInputs, 2500);
     *expectedResults = matAlloc(nbOfInputs, 10);
     setMatrices(data_set_path, *inputs, *expectedResults);
     return nn;
+}
+
+void convertImageToMat(char *path, matrix *dest)
+{
+    convertImage(path, dest, 0);
+}
+
+int getPrediction(matrix* mat)
+{
+    int pred = 0;
+    float prob = mat->mat[0];
+    for (size_t i = 1; i < mat->cols; i++)
+    {
+        if(mat->mat[i] > prob)
+        {
+            pred = i;
+            prob = mat->mat[i];
+        }
+    }
+    return pred;
 }

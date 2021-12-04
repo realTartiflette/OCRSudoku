@@ -1,6 +1,6 @@
 CC = gcc
 
-dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o hough.o sobel.o edgeDetector.o big_line_detection.o cut.o
+dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o hough.o sobel.o edgeDetector.o big_line_detection.o cut.o matrix.o neuralNetwork.o initNetwork.o
 
 dependeciesNN = network.o matrix.o neuralNetwork.o initNetwork.o manipulatePixel.o
 dependeciesCut = cutting.o cut.o manipulatePixel.o
@@ -60,7 +60,7 @@ sobel.o:
 big_line_detection.o:
 	gcc -c -g manipulateImage/big_line_detection.c -lSDL2 -lSDL2main -lSDL2_image
 cut.o: Cutting/cut.h
-	gcc -c Cutting/cutting.c -lSDL2 -lSDL2main -lSDL2_image
+	gcc -c -g Cutting/cut.c -lSDL2 -lSDL2main -lSDL2_image
 
 #neural network
 
@@ -81,8 +81,8 @@ solver.o: solverSudoku/solver.c
 
 cutting.o: Cutting/cut.h
 	gcc -c Cutting/cutting.c -lSDL2 -lSDL2main -lSDL2_image
-cut.o: Cutting/manipulatePixel.h
-	gcc -c Cutting/cut.c -lSDL2 -lSDL2main -lSDL2_image
+#cut.o: Cutting/manipulatePixel.h
+#	gcc -c Cutting/cut.c -lSDL2 -lSDL2main -lSDL2_image
 
 clean:
 	rm *.o results/* image network solver cutting

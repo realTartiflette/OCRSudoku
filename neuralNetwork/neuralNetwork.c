@@ -172,7 +172,6 @@ void _forwardPropagation(neuralNetwork *nn, matrix *inputs, matrix *buffer, matr
 
         resLayer = l->resultLayer;
     }
-    
     layer *output = nn->outputLayer;
 
     multMat(resLayer, output->weigths, buffer);
@@ -321,12 +320,12 @@ void trainNetwork(neuralNetwork *nn, matrix *inputs, matrix *expectedResults, si
     size_t maxSize = max(inputs->rows, inputs->cols);
     matrix *buffer = matAlloc(maxSize, maxSize);
     RLalloc(nn, inputs->rows);
-
+    
     for (size_t i = 0; i < nbOIter; i++)
     {
         _forwardPropagation(nn, inputs, buffer, res);
         backwardPropagation(nn, inputs, expectedResults, res, buffer);
-        //if(i%10 == 0) printf("%ld\n", i);
+        if(i%10 == 0) printf("%ld\n", i);
     }
     freeRL(nn);
     freeMat(buffer);
