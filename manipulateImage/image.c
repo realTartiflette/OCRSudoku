@@ -17,11 +17,13 @@ int main(int argc, char **argv)
 {
 	if (argc == 2)
 	{
+    
 		SDL_Surface *BaseImg = IMG_Load(argv[1]);
 		SDL_Surface *grayImg = Grayscale(BaseImg);
-		SDL_Surface *thresholdImg = Threshold(grayImg, 1);
+		SDL_Surface *thresholdImg = Threshold(grayImg);
 		SDL_Surface *blurImg = GaussianBlur(thresholdImg);
 		SDL_Surface *sobelImg = sobel(blurImg);
+
 		int* res = Detection(sobelImg);
 		char **names = CutGrid(thresholdImg, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
 		
@@ -58,6 +60,15 @@ int main(int argc, char **argv)
 		free(names);
 		freeNetwork(nn);
 		free(res);
+
+		/*int isFailed = 0;
+		int* res = Detection(sobelImg, &isFailed);
+		CutGrid(thresholdImg, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
+		free(res);
+		//name = detectLine(name);
+		//name = houghTransform(name);*/
+
+
 		exit(EXIT_SUCCESS);
 
 	}	

@@ -142,6 +142,6 @@ char* detectLine(char* path)
         }
     }
     
-    IMG_SavePNG(img, name);
+    IMG_SaveJPG(img, name, 100);
     return name;
 }

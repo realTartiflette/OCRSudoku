@@ -2,25 +2,34 @@ CC = gcc
 
 dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o sobel.o edgeDetector.o big_line_detection.o cut.o matrix.o neuralNetwork.o initNetwork.o
 
-dependeciesNN = network.o matrix.o neuralNetwork.o initNetwork.o manipulatePixel.o
-dependeciesCut = cutting.o cut.o manipulatePixel.o
+dependeciesNN = network.o matrix.o neuralNetwork.o neuralNetwork.o initNetwork.o
 
-CPPFLAGS= `pkg-config --cflags sdl2` -MMD
+dependeciesCut = cutting.o cut.o manipulatePixel.o
+dependeciesInter = window.o solverSudoku.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o sobel.o edgeDetector.o big_line_detection.o cut.o
+
+CFLAGSINTER = `pkg-config --cflags gtk+-3.0` -Wall -O3
+LIBSINTER = `pkg-config --libs gtk+-3.0` -rdynamic `pkg-config --libs sdl2` -lSDL2_image
+
+#CPPFLAGS= `pkg-config --cflags sdl2` -MMD
 CGLAGS= -Wall -Wextra -Werror -std=c99 -03
 LDFLAGS=
 LDLIBS = `pkg-config --libs sdl2` -lSDL2_image
 
 
-all: image network solver cutting
+all: image network solver cutting interface
+
 
 image: $(dependeciesImage)
 	gcc -g $(dependeciesImage) $(LDLIBS) -o image -lm
 
+interface: $(dependeciesInter)
+	gcc -g $(dependeciesInter) $(CFLAGSINTER) $(LIBSINTER) -o window -lm
+
 network: $(dependeciesNN)
 	gcc $(dependeciesNN) $(LDLIBS) -o network -lm -g
 
-solver: solver.o
-	gcc solver.o -o solver
+solver: solver.o solverSudoku.o
+	gcc -g solver.o solverSudoku.o -o solver
 
 cutting: ${dependeciesCut}
 	gcc $(dependeciesCut) $(LDLIBS) -o cutting -lm
@@ -55,8 +64,10 @@ sobel.o:
 	gcc -c -g manipulateImage/sobel.c -lSDL2 -lSDL2main -lSDL2_image
 big_line_detection.o:
 	gcc -c -g manipulateImage/big_line_detection.c -lSDL2 -lSDL2main -lSDL2_image
-cut.o: Cutting/cut.h
-	gcc -c -g Cutting/cut.c -lSDL2 -lSDL2main -lSDL2_image
+
+cut.o: Cutting/cut.h Cutting/manipulatePixel.h
+	gcc -c Cutting/cut.c -lSDL2 -lSDL2main -lSDL2_image
+
 
 #neural network
 
@@ -69,16 +80,26 @@ neuralNetwork.o: neuralNetwork/neuralNetwork.h
 initNetwork.o: neuralNetwork/initNetwork.h manipulateImage/manipulatePixel.h
 	gcc -c neuralNetwork/initNetwork.c -g -lSDL2 -lSDL2main -lSDL2_image
 
+
 #solver
-solver.o: solverSudoku/solver.c
-	gcc -c solverSudoku/solver.c
+solver.o: solverSudoku/solver.c solverSudoku/solverSudoku.h
+	gcc -g -c solverSudoku/solver.c
+solverSudoku.o: solverSudoku/solverSudoku.h
+	gcc -g -c solverSudoku/solverSudoku.c
+
 
 #cutting
 
 cutting.o: Cutting/cut.h
 	gcc -c Cutting/cutting.c -lSDL2 -lSDL2main -lSDL2_image
-#cut.o: Cutting/manipulatePixel.h
-#	gcc -c Cutting/cut.c -lSDL2 -lSDL2main -lSDL2_image
+
+
+#interface
+
+window.o: Interface/window.h solverSudoku/solverSudoku.h
+	gcc -g -c Interface/window.c $(CFLAGSINTER) $(LIBSINTER) -lSDL2 -lSDL2main -lSDL2_image
+
 
 clean:
-	rm *.o results/* image network solver cutting
+	rm *.o results/* image network solver cutting window
+

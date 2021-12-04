@@ -1,0 +1,557 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 4.3
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2020 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Sat Nov 13 06:25:28 2021
+
+# Variables
+
+# environment
+GDK_BACKEND = x11
+# environment
+LC_ALL = C
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-8656d214-623a-4a7e-a3a5-efe80f223951.sock
+# environment
+VSCODE_CWD = /home/kali
+# environment
+LESS_TERMCAP_me = [0m
+# environment
+GDM_LANG = en_US.utf8
+# default
+MAKE_COMMAND := make
+# makefile (from 'Makefile', line 8)
+CGLAGS = -Wall -Wextra -Werror -std=c99 -03
+# environment
+QT_ACCESSIBILITY = 1
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+ 
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# default
+.VARIABLES := 
+# environment
+PWD = /home/kali/Documents/OCRSudoku
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# environment
+XDG_DATA_DIRS = /usr/share/xfce4:/usr/local/share/:/usr/share/:/usr/share
+# environment
+OLDPWD = /home/kali
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+VSCODE_LOG_STACK = true
+# automatic
+%F = $(notdir $%)
+# environment
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session0
+# environment
+LANG = C
+# environment
+XAUTHORITY = /home/kali/.Xauthority
+# default
+.LOADED := 
+# environment
+LESS_TERMCAP_md = [1;36m
+# default
+.INCLUDE_DIRS = /usr/local/include /usr/include /usr/include
+# makefile
+MAKEFLAGS = pqrR
+# environment
+LESS_TERMCAP_so = [01;33m
+# makefile
+CURDIR := /home/kali/Documents/OCRSudoku
+# environment
+VSCODE_PIPE_LOGGING = true
+# makefile (from 'Makefile', line 5)
+dependeciesCut = cutting.o cut.o manipulatePixel.o
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+LESS_TERMCAP_ue = [0m
+# environment
+MFLAGS = -pqrR
+# environment
+SSH_AUTH_SOCK = /tmp/ssh-UnI8BQSJR6UG/agent.921
+# default
+.SHELLFLAGS := -c
+# environment
+XDG_CONFIG_DIRS = /etc/xdg
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"Code - OSS","submitURL":"","uploadToServer":false}
+# environment
+XDG_SESSION_DESKTOP = lightdm-xsession
+# makefile (from 'Makefile', line 1)
+MAKEFILE_LIST := Makefile
+# automatic
+@F = $(notdir $@)
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+VSCODE_PID = 1275
+# environment
+XDG_SESSION_TYPE = x11
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# environment
+SESSION_MANAGER = local/kali:@/tmp/.ICE-unix/921,unix/kali:/tmp/.ICE-unix/921
+# automatic
+*F = $(notdir $*)
+# makefile (from 'Makefile', line 4)
+dependeciesNN = network.o matrix.o neuralNetwork.o
+# environment
+QT_QPA_PLATFORMTHEME = qt5ct
+# environment
+CHROME_DESKTOP = code-oss-url-handler.desktop
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
+# environment
+BREAKPAD_DUMP_LOCATION = /home/kali/.config/Code - OSS/exthost Crash Reports
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# makefile
+SHELL = /bin/sh
+# environment
+LESS_TERMCAP_us = [1;32m
+# default
+MAKECMDGOALS := all
+# environment
+SHLVL = 0
+# environment
+MAKELEVEL := 0
+# default
+MAKE = $(MAKE_COMMAND)
+# environment
+PATH = /usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+# environment
+LESS_TERMCAP_se = [0m
+# default
+MAKEFILES := 
+# automatic
+^F = $(notdir $^)
+# environment
+COMMAND_NOT_FOUND_INSTALL_PROMPT = 1
+# makefile (from 'Makefile', line 10)
+LDLIBS = `pkg-config --libs sdl2` -lSDL2_image
+# environment
+LESS_TERMCAP_mb = [1;31m
+# environment
+VSCODE_LOG_NATIVE = false
+# automatic
+?F = $(notdir $?)
+# environment
+XDG_SEAT = seat0
+# environment
+XDG_CURRENT_DESKTOP = XFCE
+# environment
+LS_COLORS = 
+# automatic
++F = $(notdir $+)
+# environment
+XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
+# environment
+DESKTOP_SESSION = lightdm-xsession
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = XFCE
+# 'override' directive
+GNUMAKEFLAGS := 
+# environment
+LOGNAME = kali
+# makefile (from 'Makefile', line 7)
+CPPFLAGS = `pkg-config --cflags sdl2` -MMD
+# environment
+XDG_VTNR = 7
+# makefile
+.DEFAULT_GOAL := all
+# environment
+DISPLAY = :0.0
+# environment
+USER = kali
+# environment
+GTK_MODULES = gail:atk-bridge
+# default
+MAKE_VERSION := 4.3
+# makefile (from 'Makefile', line 9)
+LDFLAGS = 
+# environment
+SSH_AGENT_PID = 970
+# environment
+VSCODE_NODE_CACHED_DATA_DIR = 
+# environment
+_ = /usr/lib/code-oss/code-oss
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
+# environment
+POWERSHELL_TELEMETRY_OPTOUT = 1
+# environment
+XDG_SESSION_CLASS = user
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/services/extensions/node/extensionHostProcess
+# environment
+HOME = /home/kali
+# environment
+_JAVA_OPTIONS = -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+VSCODE_IPC_HOOK = /run/user/1000/vscode-125179f7-1.56.1-main.sock
+# environment
+XDG_SESSION_ID = 2
+# environment
+PANEL_GDK_CORE_DEVICE_EVENTS = 0
+# environment
+DOTNET_CLI_TELEMETRY_OPTOUT = 1
+# default
+.RECIPEPREFIX := 
+# automatic
+<F = $(notdir $<)
+# default
+SUFFIXES := 
+# environment
+QT_AUTO_SCREEN_SCALE_FACTOR = 0
+# environment
+XDG_GREETER_DATA_DIR = /var/lib/lightdm/data/kali
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink load
+# makefile (from 'Makefile', line 1)
+CC = gcc
+# makefile (from 'Makefile', line 3)
+dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o edgeDetector.o
+# environment
+XDG_MENU_PREFIX = xfce-
+# environment
+GDMSESSION = lightdm-xsession
+# variable set hash-table stats:
+# Load=112/1024=11%, Rehash=0, Collisions=11/148=7%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 2049, inode 1058230): 18 files, no impossibilities.
+
+# 18 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+network: network.o matrix.o neuralNetwork.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 19):
+	gcc $(dependeciesNN) -o network -lm
+
+# Not a target:
+manipulateImage/openImage.h:
+#  Implicit rule search has been done.
+#  Last modified 2021-10-31 19:02:35.187229648
+#  File has been updated.
+#  Successfully updated.
+
+openImage.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 38):
+	gcc -c manipulateImage/openImage.c -lSDL2 -lSDL2main -lSDL2_image
+
+threshold.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 46):
+	gcc -c manipulateImage/threshold.c -lSDL2 -lSDL2main -lSDL2_image
+
+manipulatePixel: manipulatePixel.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+neuralNetwork:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+neuralNetwork.o: neuralNetwork/neuralNetwork.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 57):
+	gcc -c neuralNetwork/neuralNetwork.c
+
+# Not a target:
+manipulateImage/grayscale.h:
+#  Implicit rule search has been done.
+#  Last modified 2021-10-31 19:02:35.187229648
+#  File has been updated.
+#  Successfully updated.
+
+blur.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+ 
+#  recipe to execute (from 'Makefile', line 44):
+	gcc -c manipulateImage/blur.c -lSDL2 -lSDL2main -lSDL2_image
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2021-10-31 19:02:35.183228447
+#  File has been updated.
+#  Successfully updated.
+
+edgeDetector: edgeDetector.o manipulatePixel.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+blur: pixel_operations.o Blur.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+Cutting/cut.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+cutting.o: Cutting/cut.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 66):
+	gcc -c Cutting/cutting.c -lSDL2 -lSDL2main -lSDL2_image
+
+clean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 71):
+	rm *.o results/* image network solver cutting
+
+threshold: threshold.o manipulatePixel.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+solverSudoku/solver.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+edgeDetector.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 48):
+	gcc -c manipulateImage/edgeDetector.c -lSDL2 -lSDL2main -lSDL2_image
+
+manipulatePixel.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 42):
+	gcc -c manipulateImage/manipulatePixel.c -lSDL2 -lSDL2main -lSDL2_image
+
+cutting: cutting.o cut.o manipulatePixel.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 25):
+	gcc $(dependeciesCut) $(LDLIBS) -o cutting -lm
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+solver: solver.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 22):
+	gcc solver.o -o solver
+
+grayscale: grayscale.o manipulatePixel.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+all: image neuralNetwork solver cutting rotate
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/3=0%
+
+# Not a target:
+Cutting/manipulatePixel.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+image: image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o edgeDetector.o
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/3=0%
+#  recipe to execute (from 'Makefile', line 16):
+	gcc $(dependeciesImage) $(LDLIBS) -o image -lm
+
+cut.o: Cutting/manipulatePixel.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 68):
+	gcc -c Cutting/cut.c -lSDL2 -lSDL2main -lSDL2_image
+
+matrix.o: neuralNetwork/matrix.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 55):
+	gcc -c neuralNetwork/matrix.c
+ 
+
+# Not a target:
+rotate:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+network.o: neuralNetwork/neuralNetwork.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 53):
+	gcc -c neuralNetwork/network.c
+
+image.o: manipulateImage/openImage.h manipulateImage/grayscale.h
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: ''
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# automatic
+# @ := image.o
+# automatic
+# * := 
+# automatic
+# < := manipulateImage/openImage.h
+# automatic
+# + := manipulateImage/openImage.h manipulateImage/grayscale.h
+# automatic
+# % := 
+# automatic
+# ^ := manipulateImage/openImage.h manipulateImage/grayscale.h
+# automatic
+# ? := manipulateImage/openImage.h manipulateImage/grayscale.h
+# automatic
+# | := 
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=1/11=9%
+#  recipe to execute (from 'Makefile', line 36):
+	gcc -c manipulateImage/image.c -lSDL2 -lSDL2main -lSDL2_image
+
+# Not a target:
+Blur.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+grayscale.o: manipulateImage/manipulatePixel.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 40):
+	gcc -c manipulateImage/grayscale.c -lSDL2 -lSDL2main -lSDL2_image
+
+# Not a target:
+neuralNetwork/matrix.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+solver.o: solverSudoku/solver.c
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 61):
+	gcc -c solverSudoku/solver.c
+
+# Not a target:
+neuralNetwork/neuralNetwork.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+pixel_operations.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.SUFFIXES:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+openImage: openImage.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+manipulateImage/manipulatePixel.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# files hash-table stats:
+# Load=40/1024=4%, Rehash=0, Collisions=0/106=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 53 / storage = 644 B / avg = 12 B
+# current buf: size = 8162 B / used = 644 B / count = 53 / avg = 12 B
+
+# strcache performance: lookups = 116 / hit rate = 54%
+# hash-table stats:
+# Load=53/8192=1%, Rehash=0, Collisions=0/116=0%
+# Finished Make data base on Sat Nov 13 06:25:28 2021
+ 
+
+ 

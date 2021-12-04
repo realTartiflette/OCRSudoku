@@ -1,0 +1,13 @@
+{
+    "makefile.extensionOutputFolder": "./.vscode",
+    "C_Cpp.errorSquiggles": "Disabled",
+    "files.associations": {
+        "solversudoku.h": "c",
+        "openimage.h": "c",
+        "blur.h": "c",
+        "edgedetector.h": "c",
+        "grayscale.h": "c",
+        "sobel.h": "c",
+        "cut.h": "c"
+    }
+}

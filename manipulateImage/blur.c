@@ -25,7 +25,7 @@ int maximum(int x,int y)
 }
 
 
-static Uint32 moyenne(SDL_Surface *surface, int i, int j, int n)
+static Uint32 average(SDL_Surface *surface, int i, int j, int n)
 {
     const int initial_h = maximum(j - n, 0);
     const int initial_w = maximum(i- n, 0);
@@ -69,7 +69,7 @@ SDL_Surface *GaussianBlur(SDL_Surface * img)
     {
 	    for (int j=0;j<height;j++)
 	    {
-            Uint32 pixel = moyenne(img, i, j, 2);
+            Uint32 pixel = average(img, i, j, 2);
 		    PutPixel(newIMG, i, j, pixel);
 	    }
     }
