@@ -4,6 +4,18 @@
 
 int main(int argc, char** argv)
 {
-    printf("%s\n", solve("... ..4 58.\n... 721 ..3\n4.3 ... ...\n\n21. .67 ..4\n.7. ... 2..\n63. .49 ..1\n\n1.6 ... ...\n... 158 ..6\n... ..6 95."));
-    return 0;
+    if (argc == 2)
+    {
+        FILE* fichier = NULL;
+        fichier = fopen(argv[1], "r");
+        char text[100];
+        if (fichier != NULL)
+        {
+            fgets(text, 100, fichier);
+        }
+        char *solvedSudoku = solve(text);
+        return 0;
+    }
+    printf("Not enough arguments !!");
+    return 1;
 }
