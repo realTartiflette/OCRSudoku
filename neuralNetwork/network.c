@@ -3,8 +3,12 @@
 #include "initNetwork.h"
 int main()
 {
-	
-	size_t n[MAX_LAYER] = {1000, 250};
+	size_t n[1] = {50};
+	neuralNetwork *nn = createNeuralNetwork(900, 1, n, 10);
+
+	saveNetwork(nn);
+	freeNetwork(nn);	
+	/*size_t n[MAX_LAYER] = {1000, 250};
 	matrix *inputs;
 	matrix *expectedResults;
 	char path[100] = "training_set/";
@@ -19,6 +23,6 @@ int main()
 	
 	freeMat(inputs);
 	freeMat(expectedResults);
-	freeNetwork(nn);
+	freeNetwork(nn);*/
 	return 0;
 }

@@ -332,61 +332,71 @@ void trainNetwork(neuralNetwork *nn, matrix *inputs, matrix *expectedResults, si
     freeMat(res);
 }
 
-void saveNetwork(neuralNetwork *nn, char *filename)
+void saveNetwork(neuralNetwork *nn)
 {
-    FILE *f = fopen(filename, "w");
+    FILE *f = fopen("network_info", "w");
 
+    //Save all network infos
     fprintf(f, "%ld\n%ld\n", nn->inputSize, nn->nbOfHiddenLayers);
-    
     for (size_t i = 0; i < nn->nbOfHiddenLayers; i++)
     {
         layer *l = &(nn->hiddenLayers[i]);
         fprintf(f, "%ld\n", l->weigths->cols);
-        
-        for (size_t j = 0; j < l->weigths->cols - 1; j++)
-        {
-            fprintf(f, "%.9g ", l->bias[j]);
-        }
-        fprintf(f, "%.9g\n", l->bias[l->weigths->cols - 1]);
-        
-
-        size_t len = l->weigths->rows * l->weigths->cols;
-        for (size_t j = 0; j < len - 1; j++)
-        {
-            fprintf(f, "%.9g ", l->weigths->mat[j]);
-        }
-        fprintf(f, "%.9g\n", l->weigths->mat[len - 1]);
     }
-
     layer *out = nn->outputLayer;
-    fprintf(f,"%ld\n", out->weigths->cols);
+    fprintf(f, "%ld\n", out->weigths->cols);
 
-    for (size_t i = 0; i < out->weigths->cols - 1; i++)
-    {
-        fprintf(f, "%.9g ", out->bias[i]);
-    }
-    fprintf(f, "%.9g\n", out->bias[out->weigths->cols - 1]);
+    fclose(f);
     
 
-    size_t len = out->weigths->rows * out->weigths->cols;
-    for (size_t i = 0; i < len - 1; i++)
+    f = fopen("weights_and_biases", "w");
+    for (size_t i = 0; i < nn->nbOfHiddenLayers; i++)
     {
-        fprintf(f, "%.9g ", out->weigths->mat[i]);
+        layer *l = &(nn->hiddenLayers[i]);
+        //write bias   
+        for (size_t j = 0; j < l->weigths->cols; j++)
+        {
+            fprintf(f, "%.3g\n", l->bias[j]);
+        }
+        fprintf(f, "\n");
+        //write weights
+        size_t len = l->weigths->rows * l->weigths->cols;
+        for (size_t j = 0; j < len; j++)
+        {
+            fprintf(f, "%.3g\n", l->weigths->mat[j]);
+        }
+        fprintf(f, "\n");
     }
-    fprintf(f,"%.9g\n", out->weigths->mat[len - 1]);
+
+    //write biases of outputs
+    for (size_t i = 0; i < out->weigths->cols; i++)
+    {
+        fprintf(f, "%.3g\n", out->bias[i]);
+    }
+    fprintf(f, "\n");
+    
+    //write weights of outputs
+    size_t len = out->weigths->rows * out->weigths->cols;
+    for (size_t i = 0; i < len; i++)
+    {
+        fprintf(f, "%.3g\n", out->weigths->mat[i]);
+    }
 
     fclose(f);
 }
 
-neuralNetwork *loadNetwork(char *filename)
+neuralNetwork *loadNetwork()
 {
-    FILE *f = fopen(filename, "r");
+    FILE *f = fopen("network_info", "r");
     size_t inputSize;
     fscanf(f, "%ld\n", &inputSize);
 
     size_t nbOfHiddenLayers;
     fscanf(f, "%ld\n", &nbOfHiddenLayers);
+    printf("%ld\n", nbOfHiddenLayers);
     
+    FILE *f1 = fopen("weights_and_biases", "r");
+
     layer *layers = calloc(nbOfHiddenLayers, sizeof(layer));
     size_t prevWeigthSize = inputSize;
 
@@ -395,21 +405,24 @@ neuralNetwork *loadNetwork(char *filename)
         layer l;
         size_t nbOfNeurons;
         fscanf(f, "%ld\n", &nbOfNeurons);
+        printf("%ld\n", nbOfNeurons);
 
+        //read biases
         l.bias = calloc(nbOfNeurons, sizeof(float));
-        for (size_t j = 0; j < nbOfNeurons - 1; j++)
+        for (size_t j = 0; j < nbOfNeurons; j++)
         {
-            fscanf(f, "%f ", &(l.bias[j]));
+            fscanf(f1, "%f\n", &(l.bias[j]));
         }
-        fscanf(f, "%f\n", &(l.bias[nbOfNeurons-1]));
+        fscanf(f1, "\n");
 
+        //read weights
         l.weigths = matAlloc(prevWeigthSize, nbOfNeurons);
         size_t len = prevWeigthSize * nbOfNeurons;
-        for (size_t j = 0; j < len - 1; j++)
+        for (size_t j = 0; j < len; j++)
         {
-            fscanf(f, "%f ", &(l.weigths->mat[j]));
+            fscanf(f1, "%f\n", &(l.weigths->mat[j]));
         }
-        fscanf(f, "%f\n", &(l.weigths->mat[len - 1]));
+        fscanf(f1, "\n");
         
         l.resultLayer = NULL;
         layers[i] = l;
@@ -419,21 +432,21 @@ neuralNetwork *loadNetwork(char *filename)
     layer *outputLayer = malloc(sizeof(layer));
     size_t outputSize;
     fscanf(f, "%ld\n", &outputSize);
+    printf("%ld\n", outputSize);
 
     outputLayer->bias = calloc(outputSize, sizeof(float));
-    for (size_t i = 0; i < outputSize - 1; i++)
+    for (size_t i = 0; i < outputSize; i++)
     {
-        fscanf(f, "%f ", &(outputLayer->bias[i]));
+        fscanf(f1, "%f\n", &(outputLayer->bias[i]));
     }
-    fscanf(f, "%f\n", &(outputLayer->bias[outputSize - 1]));
+    fscanf(f1, "\n");
 
     outputLayer->weigths = matAlloc(prevWeigthSize, outputSize);
     size_t len = prevWeigthSize * outputSize;
-    for (size_t i = 0; i < len - 1; i++)
+    for (size_t i = 0; i < len; i++)
     {
-        fscanf(f, "%f ", &(outputLayer->weigths->mat[i]));
+        fscanf(f1, "%f\n", &(outputLayer->weigths->mat[i]));
     }
-    fscanf(f, "%f\n", &(outputLayer->weigths->mat[len - 1]));
     
     outputLayer->resultLayer = NULL;
 
@@ -444,6 +457,6 @@ neuralNetwork *loadNetwork(char *filename)
     nn->outputLayer = outputLayer;
     
     fclose(f);
-
+    fclose(f1);
     return nn;
 }

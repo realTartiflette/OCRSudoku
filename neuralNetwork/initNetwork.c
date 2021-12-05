@@ -74,7 +74,7 @@ void convertImage(char *path, matrix *inputs, size_t curRow)
     if(img->h * img->w > inputs->cols)
     {
         //resize image
-        SDL_Surface *nimg = Scale(img, 49, 49);
+        SDL_Surface *nimg = Scale(img, 29, 29);
         h = nimg->h, w = nimg->w;
         SDL_FreeSurface(img);
         img = nimg;
@@ -163,10 +163,10 @@ void setMatrices(char *data_set_path, matrix *inputs, matrix *expectedResults)
 
 neuralNetwork *initNetwork(char *data_set_path, size_t nbOfHiddenLayers, size_t nbOfNeuronsByLayers[MAX_LAYER], matrix **inputs, matrix **expectedResults)
 {
-    neuralNetwork *nn = createNeuralNetwork(2500, nbOfHiddenLayers, nbOfNeuronsByLayers, 10);
+    neuralNetwork *nn = createNeuralNetwork(900, nbOfHiddenLayers, nbOfNeuronsByLayers, 10);
     
     size_t nbOfInputs = getNbOfInputs(data_set_path);
-    *inputs = matAlloc(nbOfInputs, 2500);
+    *inputs = matAlloc(nbOfInputs, 900);
     *expectedResults = matAlloc(nbOfInputs, 10);
     setMatrices(data_set_path, *inputs, *expectedResults);
     return nn;

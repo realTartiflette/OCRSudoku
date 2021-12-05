@@ -1,8 +1,8 @@
 CC = gcc
 
-dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o sobel.o edgeDetector.o big_line_detection.o cut.o matrix.o neuralNetwork.o initNetwork.o autoRotate.o
+dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o sobel.o edgeDetector.o big_line_detection.o cut.o matrix.o neuralNetwork.o initNetwork.o
 
-dependeciesNN = network.o matrix.o neuralNetwork.o initNetwork.o
+dependeciesNN = network.o matrix.o neuralNetwork.o initNetwork.o manipulatePixel.o
 
 dependeciesCut = cutting.o cut.o manipulatePixel.o
 dependeciesInter = window.o solverSudoku.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o sobel.o edgeDetector.o big_line_detection.o cut.o matrix.o neuralNetwork.o initNetwork.o

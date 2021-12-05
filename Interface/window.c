@@ -166,27 +166,29 @@ void on_chooser_file_set(GtkWidget *b)
 		if (!isFailed)
 		{
 			char **names = CutGrid(thresholdImg, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
-			neuralNetwork *nn = loadNetwork("number_detection");
+			neuralNetwork *nn = loadNetwork();
 			int k = 0;
 			
 			for(size_t i = 0; i < 9; i++)
 			{
 				for (size_t j = 0; j < 9; j++)
 				{
-					matrix *inputs = matAlloc(1, 2500);
+					matrix *inputs = matAlloc(1, 900);
 					convertImageToMat(names[j*9+i], inputs);
+					
 
 					matrix *resN = matAlloc(1, 10);
 					forwardPropagation(nn, inputs, resN);
 
 					int number = getPrediction(resN);
-					if (tmp[k] == '\n' || tmp[k] == ' ')
+					/*if (tmp[k] == '\n' || tmp[k] == ' ')
 						k++;
 					if (tmp[k] == '\n')
 						k++;
-						
-					tmp[k] = number==0?'.':number+48;
-					k++;
+					
+					//printf("%d\n",number);
+					tmp[k] = number==0 ? '.' : number+48;
+					k++;*/
 					
 					
 					freeMat(inputs);
@@ -195,7 +197,7 @@ void on_chooser_file_set(GtkWidget *b)
 				}
 			}
 			gtk_text_buffer_set_text(TextBuffer, (const gchar *) tmp, (gint) -1);
-			
+			printMat(nn->hiddenLayers[0].weigths);
 			free(names);
 			freeNetwork(nn);
 			free(res);
