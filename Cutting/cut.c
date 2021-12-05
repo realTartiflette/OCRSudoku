@@ -72,31 +72,31 @@ SDL_Surface* RemovecontLeftAndRight(SDL_Surface*img)
 			if (h<temp-15)
 			{
 				found2=1;
-				new_img=Cut(img,point1-8,0,point3+8,temp-1);
+				new_img=Cut(img,point1-8,1,point3+8,temp-1);
 			}
 			else if (h<line-10)
 			{
 				found2=1;
-				new_img=Cut(img,point1-8,0,point3+8,temp-1);
+				new_img=Cut(img,point1-8,1,point3+8,temp-1);
 			}			
 		}
 		
 		else if (r1==255 && h<line-10)
 		{
 			found1=1;
-			new_img=Cut(img,0,0,point2+16,temp-1);
+			new_img=Cut(img,1,1,point2+16,temp-1);
 		}
 		else if (r3==255 && h<(line-10))
 		{
 
 			found3=1;
-			new_img=Cut(img,point2-16,0,w,temp-1);
+			new_img=Cut(img,point2-16,0,w-1,temp-1);
 		}
 		h--;
 
 		if (found1==0 && found3==0 && found2==0 && h<temp+2/2)
 		{
-			new_img=Cut(img,point1-8,0,point3+8,temp-1);
+			new_img=Cut(img,point1-8,1,point3+8,temp-1);
 		}
 
 
@@ -162,7 +162,7 @@ SDL_Surface* RemovecontTopAndBot(SDL_Surface*img)
 			if (rt==255)
 			{
 				found3=1;
-				new_img=Cut(img,0,point1+(x/2)-5,temp-1,h-1);
+				new_img=Cut(img,1,point1+(x/2)-5,temp-1,h-1);
 			}
 		}
 		
@@ -173,7 +173,7 @@ SDL_Surface* RemovecontTopAndBot(SDL_Surface*img)
 			{
 
 				found1=1;
-				new_img=Cut(img,0,0,temp-1,point3-(x/2)+5);
+				new_img=Cut(img,1,1,temp-1,point3-(x/2)+5);
 			}
 		}
 
@@ -181,7 +181,7 @@ SDL_Surface* RemovecontTopAndBot(SDL_Surface*img)
 
 		if (found1==0 && found3==0 && found2==0 && w>temp)
 		{
-			new_img=Cut(img,0,point1,temp-1,point3+5);
+			new_img=Cut(img,1,point1,temp-1,point3+5);
 			found2=1;
 		}
 
