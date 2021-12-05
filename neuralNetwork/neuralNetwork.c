@@ -393,7 +393,7 @@ neuralNetwork *loadNetwork()
 
     size_t nbOfHiddenLayers;
     fscanf(f, "%ld\n", &nbOfHiddenLayers);
-    printf("%ld\n", nbOfHiddenLayers);
+    //printf("%ld\n", nbOfHiddenLayers);
     
     FILE *f1 = fopen("weights_and_biases", "r");
 
@@ -405,7 +405,7 @@ neuralNetwork *loadNetwork()
         layer l;
         size_t nbOfNeurons;
         fscanf(f, "%ld\n", &nbOfNeurons);
-        printf("%ld\n", nbOfNeurons);
+        //printf("%ld\n", nbOfNeurons);
 
         //read biases
         l.bias = calloc(nbOfNeurons, sizeof(float));
@@ -432,7 +432,7 @@ neuralNetwork *loadNetwork()
     layer *outputLayer = malloc(sizeof(layer));
     size_t outputSize;
     fscanf(f, "%ld\n", &outputSize);
-    printf("%ld\n", outputSize);
+    //printf("%ld\n", outputSize);
 
     outputLayer->bias = calloc(outputSize, sizeof(float));
     for (size_t i = 0; i < outputSize; i++)

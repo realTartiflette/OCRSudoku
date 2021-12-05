@@ -116,7 +116,6 @@ void on_saveFile_clicked(GtkButton *b)
 	FILE *saveFile = fopen("sudoku.result", "w");
 	if(saveFile != NULL)
 	{
-		printf("file opened\n");
 		GtkTextIter begin, end;
 		gchar *text;
 		gtk_text_buffer_get_iter_at_offset(GTK_TEXT_BUFFER(TextBuffer2), &begin, (gint) 0);
@@ -150,7 +149,7 @@ void on_solveButton_clicked(GtkWidget *b)
 
 void on_chooser_file_activated(GtkFileChooserButton *b)
 {
-	printf("ok");
+	
 }
 
 void computeImage(char *filename)
@@ -315,30 +314,18 @@ void on_chooser_file_set(GtkWidget *b)
 
 void on_saveText_clicked(GtkButton *b)
 {
-	GtkTextIter begin, end;
-	gchar *text;
-
-	gtk_text_buffer_get_iter_at_offset(GTK_TEXT_BUFFER(TextBuffer), &begin, (gint) 0);
-	gtk_text_buffer_get_iter_at_offset(GTK_TEXT_BUFFER(TextBuffer), &end, (gint) -1);
-
-	text = gtk_text_buffer_get_text(GTK_TEXT_BUFFER(TextBuffer), &begin, &end, TRUE);
-	printf("#######\n%s\n#######\n", text);
-	gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(TextView), FALSE);
-	gtk_text_view_set_editable(GTK_TEXT_VIEW(TextView), FALSE);
 	gtk_widget_hide(saveText);
 }
 
 void on_editText_clicked(GtkButton *b)
 {
 	gtk_widget_hide(saveLabel);
-	printf("*** on edit text\n");
 	gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(TextView), TRUE);
 	gtk_text_view_set_editable(GTK_TEXT_VIEW(TextView), TRUE);
 }
 
 void on_changed_text(GtkTextBuffer *t)
 {
-	printf("*** text changed\n");
 	gtk_widget_show(saveText);
 }
 
@@ -359,6 +346,10 @@ void on_entry1_changed(GtkEntry *e)
 	else if (strcmp(mode, "Sobel") == 0)
 	{
 		filename = "results/sobelIMG.jpg";
+	}
+	else if (strcmp(mode, "Rotation") == 0)
+	{
+		filename = "results/rotatedIMG.jpg";
 	}
 	else if (isFailed)
 	{
