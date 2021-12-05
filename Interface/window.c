@@ -48,12 +48,14 @@ GtkWidget *noGridLabel;
 GtkWidget *combo1;
 GtkWidget *entry1;
 char tmp[1024];
+neuralNetwork *nn;
 int isFailed;
 
 
-
+void computeImage(char *filename);
 int main (int argc, char *argv[])
 {
+	nn = loadNetwork();
     // Initializes GTK.
     gtk_init(NULL, NULL);
 
@@ -96,11 +98,13 @@ int main (int argc, char *argv[])
 	gtk_widget_hide(noGridLabel);
 	gtk_widget_hide(saveLabel);
 
+	
     // Runs the main loop.
     gtk_widget_show(window);
     image1 = NULL;
 	image3 = NULL;
     gtk_main();
+	freeNetwork(nn);
 
     // Exits.
     return 0;
@@ -143,6 +147,60 @@ void on_chooser_file_activated(GtkFileChooserButton *b)
 	printf("ok");
 }
 
+void computeImage(char *filename)
+{
+	SDL_Surface *BaseImg = IMG_Load(filename);
+	isFailed = 0;
+	SDL_Surface *grayImg = Grayscale(BaseImg);
+	SDL_Surface *thresholdImg = Threshold(grayImg);
+	SDL_Surface *blurImg = GaussianBlur(thresholdImg);
+	SDL_Surface *sobelImg = sobel(blurImg);
+	int *res = Detection(sobelImg, &isFailed);
+	if (!isFailed)
+	{
+		char **names = CutGrid(thresholdImg, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
+		
+		int k = 0;
+		
+		for(size_t i = 0; i < 9; i++)
+		{
+			for (size_t j = 0; j < 9; j++)
+			{
+				matrix *inputs = matAlloc(1, 900);
+				convertImageToMat(names[j*9+i], inputs);
+				printf("%ld\n", j*9+i);
+				
+				matrix *resN = matAlloc(1, 10);
+				forwardPropagation(nn, inputs, resN);
+				printf("%ld\n", j*9+i);
+
+				int number = getPrediction(resN);
+				if (tmp[k] == '\n' || tmp[k] == ' ')
+					k++;
+				if (tmp[k] == '\n')
+					k++;
+				
+				tmp[k] = number==0 ? '.' : number+48;
+				k++;
+				printf("%ld\n", j*9+i);
+				
+				freeMat(inputs);
+				freeMat(resN);
+				free(names[j*9+i]);
+			}
+		}
+		gtk_text_buffer_set_text(TextBuffer, (const gchar *) tmp, (gint) -1);
+		
+		free(names);
+		free(res);
+	}
+	else
+	{
+		strcpy(tmp, "... ... ...\n... ... ...\n... ... ...\n\n... ... ...\n... ... ...\n... ... ...\n\n... ... ...\n... ... ...\n... ... ...");
+		gtk_text_buffer_set_text(TextBuffer, (const gchar *) tmp, (gint) -1);
+	}	
+}
+
 void on_chooser_file_set(GtkWidget *b)
 {
 	gtk_widget_hide(saveLabel);
@@ -154,59 +212,9 @@ void on_chooser_file_set(GtkWidget *b)
 		(filename[len-1] == 'p' && filename[len-2] == 'm' && filename[len-3] == 'b') ||
 		(filename[len-1] == 'g' && filename[len-2] == 'e' && filename[len-3] == 'p' && filename[len-4] == 'j'))
 	{
-		SDL_Surface *BaseImg = IMG_Load(filename);
-		isFailed = 0;
+		computeImage(filename);
 		int error;
 		char* error1;
-		SDL_Surface *grayImg = Grayscale(BaseImg);
-		SDL_Surface *thresholdImg = Threshold(grayImg);
-		SDL_Surface *blurImg = GaussianBlur(thresholdImg);
-		SDL_Surface *sobelImg = sobel(blurImg);
-		int *res = Detection(sobelImg, &isFailed);
-		if (!isFailed)
-		{
-			char **names = CutGrid(thresholdImg, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
-			neuralNetwork *nn = loadNetwork();
-			int k = 0;
-			
-			for(size_t i = 0; i < 9; i++)
-			{
-				for (size_t j = 0; j < 9; j++)
-				{
-					matrix *inputs = matAlloc(1, 900);
-					convertImageToMat(names[j*9+i], inputs);
-					
-
-					matrix *resN = matAlloc(1, 10);
-					forwardPropagation(nn, inputs, resN);
-
-					int number = getPrediction(resN);
-					/*if (tmp[k] == '\n' || tmp[k] == ' ')
-						k++;
-					if (tmp[k] == '\n')
-						k++;
-					
-					//printf("%d\n",number);
-					tmp[k] = number==0 ? '.' : number+48;
-					k++;*/
-					
-					
-					freeMat(inputs);
-					freeMat(resN);
-					free(names[j*9+i]);
-				}
-			}
-			gtk_text_buffer_set_text(TextBuffer, (const gchar *) tmp, (gint) -1);
-			printMat(nn->hiddenLayers[0].weigths);
-			free(names);
-			freeNetwork(nn);
-			free(res);
-		}
-		else
-		{
-			strcpy(tmp, "... ... ...\n... ... ...\n... ... ...\n\n... ... ...\n... ... ...\n... ... ...\n\n... ... ...\n... ... ...\n... ... ...");
-			gtk_text_buffer_set_text(TextBuffer, (const gchar *) tmp, (gint) -1);
-		}
 		char cmd[2048];
 		FILE *f1;
 		int j, h, v;
