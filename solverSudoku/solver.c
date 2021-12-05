@@ -4,18 +4,45 @@
 
 int main(int argc, char** argv)
 {
+    FILE* fichier = NULL;
     if (argc == 2)
     {
-        FILE* fichier = NULL;
         fichier = fopen(argv[1], "r");
-        char text[100];
+        char text[130];
+
+
+        char caractereActuel = ' ';
+
         if (fichier != NULL)
         {
-            fgets(text, 100, fichier);
+            int i=0;
+            int j=0;
+            do
+            {
+                caractereActuel = fgetc(fichier); 
+                text[i]=caractereActuel;
+                i++;
+
+            } while (caractereActuel != EOF && i<130); 
+            char *solvedSudoku = solve(text);
+            FILE* newfichier= fopen(strcat(argv[1],".result"),"w");
+            do
+            {
+                caractereActuel = solvedSudoku[j];
+                printf("%c",caractereActuel);
+                fputc(((char)caractereActuel),newfichier);
+                j++;
+            } while (caractereActuel!=EOF && j<130);
+    
+            fclose(fichier);
         }
-        char *solvedSudoku = solve(text);
         return 0;
     }
-    printf("Not enough arguments !!");
-    return 1;
+    else
+    {
+        printf("Not enough arguments !!");
+        return 1;
+    }
+
 }
+
