@@ -168,11 +168,9 @@ void computeImage(char *filename)
 			{
 				matrix *inputs = matAlloc(1, 900);
 				convertImageToMat(names[j*9+i], inputs);
-				printf("%ld\n", j*9+i);
 				
 				matrix *resN = matAlloc(1, 10);
 				forwardPropagation(nn, inputs, resN);
-				printf("%ld\n", j*9+i);
 
 				int number = getPrediction(resN);
 				if (tmp[k] == '\n' || tmp[k] == ' ')
@@ -182,7 +180,6 @@ void computeImage(char *filename)
 				
 				tmp[k] = number==0 ? '.' : number+48;
 				k++;
-				printf("%ld\n", j*9+i);
 				
 				freeMat(inputs);
 				freeMat(resN);
