@@ -1,11 +1,11 @@
 CC = gcc
 
-dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o sobel.o edgeDetector.o big_line_detection.o cut.o matrix.o neuralNetwork.o initNetwork.o
+dependeciesImage = image.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o sobel.o edgeDetector.o big_line_detection.o cut.o matrix.o neuralNetwork.o initNetwork.o autoRotate.o
 
 dependeciesNN = network.o matrix.o neuralNetwork.o initNetwork.o manipulatePixel.o
 
 dependeciesCut = cutting.o cut.o manipulatePixel.o
-dependeciesInter = window.o solverSudoku.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o sobel.o edgeDetector.o big_line_detection.o cut.o matrix.o neuralNetwork.o initNetwork.o
+dependeciesInter = window.o solverSudoku.o openImage.o manipulatePixel.o grayscale.o blur.o threshold.o sobel.o edgeDetector.o big_line_detection.o cut.o matrix.o neuralNetwork.o initNetwork.o autoRotate.o
 
 CFLAGSINTER = `pkg-config --cflags gtk+-3.0` -Wall -O3
 LIBSINTER = `pkg-config --libs gtk+-3.0` -rdynamic `pkg-config --libs sdl2` -lSDL2_image
@@ -103,5 +103,5 @@ window.o: Interface/window.h solverSudoku/solverSudoku.h
 
 
 clean:
-	rm *.o results/* image network solver cutting window
+	rm *.o results/* image network solver cutting window error
 

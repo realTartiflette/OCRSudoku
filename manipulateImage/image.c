@@ -11,7 +11,7 @@
 #include "big_line_detection.h"
 #include"../Cutting/cut.h"
 #include "../neuralNetwork/initNetwork.h"
-//#include "autoRotate.h"
+#include "autoRotate.h"
 
 
 int main(int argc, char **argv)
@@ -22,12 +22,14 @@ int main(int argc, char **argv)
 		SDL_Surface *BaseImg = IMG_Load(argv[1]);
 		SDL_Surface *grayImg = Grayscale(BaseImg);
 		SDL_Surface *thresholdImg = Threshold(grayImg);
-		SDL_Surface *blurImg = GaussianBlur(thresholdImg);
+		double angle = autoRotation(thresholdImg);
+		SDL_Surface *rotatedImg = Rotate(thresholdImg,angle);
+        SDL_Surface *blurImg = GaussianBlur(rotatedImg);
 		SDL_Surface *sobelImg = sobel(blurImg);
 
 		int isFailed = 0;
 		int* res = Detection(sobelImg, &isFailed);
-		char **names = CutGrid(thresholdImg, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
+		char **names = CutGrid(rotatedImg, res[1], res[2], res[1]+res[0]-1, res[2]+res[0]-1);
 		
 		neuralNetwork *nn = loadNetwork();
 		for(size_t i = 0; i < 9; i++)
@@ -40,16 +42,9 @@ int main(int argc, char **argv)
 
 				matrix *resN = matAlloc(1, 10);
 				forwardPropagation(nn, inputs, resN);
-
-				int number = getPrediction(resN);
-				/*if (tmp[k] == '\n' || tmp[k] == ' ')
-					k++;
-				if (tmp[k] == '\n')
-					k++;*/
 				
-				//printf("%d\n",number);
-				//tmp[k] = number==0?'.':number+48;
-				//k++;
+				printf("%s : ", names[j*9+i]);
+				printf("%d\n", getPrediction(resN));
 				
 				
 				freeMat(inputs);
@@ -58,7 +53,7 @@ int main(int argc, char **argv)
 			}
 		}
 		
-		printMat(nn->hiddenLayers[0].weigths);
+		
 		free(names);
 		freeNetwork(nn);
 		free(res);
