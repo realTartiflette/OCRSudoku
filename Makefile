@@ -20,7 +20,7 @@ image: $(dependeciesImage)
 	gcc -g $(dependeciesImage) $(LDLIBS) -o image -lm
 
 interface: $(dependeciesInter)
-	gcc -g $(dependeciesInter) $(CFLAGSINTER) $(LIBSINTER) -o window -lm
+	gcc -g $(dependeciesInter) $(CFLAGSINTER) $(LIBSINTER) -o interface -lm
 
 network: $(dependeciesNN)
 	gcc $(dependeciesNN) $(LDLIBS) -o network -lm -g
@@ -97,5 +97,5 @@ window.o: Interface/window.h solverSudoku/solverSudoku.h
 
 
 clean:
-	rm *.o results/* image network solver window error
+	rm *.o results/* image network solver interface error
 

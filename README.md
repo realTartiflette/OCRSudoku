@@ -1,20 +1,22 @@
-Utilisation du Makefile:
+Makefile use:
 
-Pour le réseau de neurones
+To train a neural network:
 make network
+./network
 
-Pour le traitement image et detection des contours
+To perform image processing and edge detection:
 make image
+./image img_name.extention
 
-Pour le solveur de sodoku
+To compile the sudoku solver:
 make solver
+./solver sudoku_file
 
-Pour couper une image
-make cutting
+To compile the graphic interface:
+make interface
+./interface
 
-Tous les résultats se trouveront dans le dossier results/
+To compile everything:
+make or make all
 
-----------------------------
-
-Pour la rotation d'une image, il faut utiliser le makefile du fichier cutting
-et utiliser la commande make
+All the results files can be found in the "results/" folder
