@@ -8,7 +8,7 @@ int main(int argc, char** argv)
     if (argc == 2)
     {
         fichier = fopen(argv[1], "r");
-        char text[130];
+        char text[120];
 
 
         char caractereActuel = ' ';
@@ -23,16 +23,15 @@ int main(int argc, char** argv)
                 text[i]=caractereActuel;
                 i++;
 
-            } while (caractereActuel != EOF && i<130); 
+            } while (caractereActuel != EOF && i<120); 
             char *solvedSudoku = solve(text);
             FILE* newfichier= fopen(strcat(argv[1],".result"),"w");
             do
             {
                 caractereActuel = solvedSudoku[j];
-                printf("%c",caractereActuel);
                 fputc(((char)caractereActuel),newfichier);
                 j++;
-            } while (caractereActuel!=EOF && j<130);
+            } while (caractereActuel!=EOF && j<120);
     
             fclose(fichier);
         }
